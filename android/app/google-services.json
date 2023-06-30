@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "724255684967",
+    "project_id": "harmoniza-ativos-675a4",
+    "storage_bucket": "harmoniza-ativos-675a4.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:724255684967:android:b7bef1c93c409641ad17c2",
+        "android_client_info": {
+          "package_name": "com.example.harmoniza_ativos"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "724255684967-723cb7s2t0cfqd5iv9sbcosqhh5e03sa.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.harmoniza_ativos",
+            "certificate_hash": "73369777123df2da1311e351c6868f6ef2d167b1"
+          }
+        },
+        {
+          "client_id": "724255684967-o8hsh1jpjkv9bfc0knh7uog11sujqtf8.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCNKcxiUPMZqqP_mOzASdu3ls9Q3xrbrpI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "724255684967-o8hsh1jpjkv9bfc0knh7uog11sujqtf8.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
