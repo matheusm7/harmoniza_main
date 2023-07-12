@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:harmoniza_ativos/src/pages/navpages/login/login_page.dart';
 import 'package:provider/provider.dart';
 
 import '../../../../providers/auth_provider.dart';
+import '../login/login_page.dart';
 
 class RegisterPage extends StatefulWidget {
   const RegisterPage({Key? key}) : super(key: key);
@@ -15,6 +15,7 @@ class _RegisterPageState extends State<RegisterPage> {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   final TextEditingController _confirmPasswordController = TextEditingController();
+  final TextEditingController _displayNameController = TextEditingController();
   bool _isError = false;
   String _errorMessage = '';
 
@@ -92,8 +93,9 @@ class _RegisterPageState extends State<RegisterPage> {
                               bottom: BorderSide(color: Colors.grey),
                             ),
                           ),
-                          child: const TextField(
-                            decoration: InputDecoration(
+                          child: TextField(
+                            controller: _displayNameController,
+                            decoration: const InputDecoration(
                               border: InputBorder.none,
                               hintText: "Nome",
                               hintStyle: TextStyle(
@@ -163,6 +165,7 @@ class _RegisterPageState extends State<RegisterPage> {
                         String email = _emailController.text.trim();
                         String password = _passwordController.text.trim();
                         String confirmPassword = _confirmPasswordController.text.trim();
+                        String displayName = _displayNameController.text;
                         if (email.isEmpty || password.isEmpty || confirmPassword.isEmpty) {
                           showDialog(
                             context: context,
@@ -204,8 +207,8 @@ class _RegisterPageState extends State<RegisterPage> {
                           return;
                         }
 
-                        bool success = await authProvider.register(email, password, confirmPassword);
-                        if (success) {
+                        final success = await authProvider.register(email, password, confirmPassword, displayName);
+                        if (true) {
                           showDialog(
                             context: context,
                             builder: (context) {

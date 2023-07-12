@@ -1,10 +1,9 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:harmoniza_ativos/app/pages/profile/edit/edit_profile.dart';
+import 'package:harmoniza_ativos/app/pages/profile/support/support_page_profile.dart';
 import 'package:harmoniza_ativos/data/data.dart';
-
-import '../../../../app/pages/profile/edit/edit_profile.dart';
-import '../../../../app/pages/profile/support/support_page_profile.dart';
 
 class MyPage extends StatefulWidget {
   const MyPage({super.key});
@@ -47,7 +46,7 @@ class _MyPageState extends State<MyPage> {
                   ],
                 ),
                 const SizedBox(height: 5),
-                Text(FirebaseAuth.instance.currentUser?.displayName ?? '', style: Theme.of(context).textTheme.titleLarge),
+                Text(FirebaseAuth.instance.currentUser!.displayName!, style: Theme.of(context).textTheme.titleLarge),
                 const SizedBox(height: 5),
                 Text(FirebaseAuth.instance.currentUser!.email!, style: Theme.of(context).textTheme.bodyMedium),
                 SizedBox(

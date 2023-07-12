@@ -48,3 +48,4 @@ const String tJoined = 'Joined';
 const String tJoinedAt = '31 October 2022';
 
 const Color dourado = Color.fromARGB(255, 234, 206, 150);
+Color douradoEscuro = const Color.fromARGB(255, 168, 138, 78);

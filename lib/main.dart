@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:harmoniza_ativos/providers/auth_provider.dart';
 import 'package:harmoniza_ativos/src/pages/navpages/actives.dart';
 import 'package:harmoniza_ativos/src/pages/navpages/bottom_navigation_bar.dart';
-import 'package:harmoniza_ativos/src/pages/navpages/consultation/query_definition_page.dart';
 import 'package:harmoniza_ativos/src/pages/navpages/homepage/home_page.dart';
 import 'package:harmoniza_ativos/src/pages/navpages/login/login_page.dart';
 import 'package:harmoniza_ativos/src/pages/navpages/register/register_page.dart';
@@ -36,7 +35,7 @@ class MyApp extends StatelessWidget {
           '/activesPage': (context) => const ActivesPage(),
         },
         debugShowCheckedModeBanner: false,
-        home: const QueryDefinition(),
+        home: const LoginPage(),
       ),
     );
   }

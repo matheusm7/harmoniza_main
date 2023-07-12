@@ -1,22 +1,23 @@
 import 'package:flutter/material.dart';
-import 'package:harmoniza_ativos/src/pages/navpages/register/register_page.dart';
 import 'package:provider/provider.dart';
 
-import '../../../../app/controller/forgot_password_page.dart';
 import '../../../../providers/auth_provider.dart';
+import '../login/login_page.dart';
 
-class LoginPage extends StatefulWidget {
-  const LoginPage({Key? key}) : super(key: key);
+class RegisterPage extends StatefulWidget {
+  const RegisterPage({Key? key}) : super(key: key);
 
   @override
-  State<LoginPage> createState() => _LoginPageState();
+  State<RegisterPage> createState() => _RegisterPageState();
 }
 
-class _LoginPageState extends State<LoginPage> {
+class _RegisterPageState extends State<RegisterPage> {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
-  final bool _isError = false;
-  final String _errorMessage = '';
+  final TextEditingController _confirmPasswordController = TextEditingController();
+  final TextEditingController _displayNameController = TextEditingController();
+  bool _isError = false;
+  String _errorMessage = '';
 
   @override
   Widget build(BuildContext context) {
@@ -24,7 +25,7 @@ class _LoginPageState extends State<LoginPage> {
     final authProvider = Provider.of<AuthProvider>(context);
 
     return Scaffold(
-      backgroundColor: Colors.grey[300],
+      backgroundColor: Colors.white,
       body: SingleChildScrollView(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -57,7 +58,7 @@ class _LoginPageState extends State<LoginPage> {
                         ),
                       ),
                     ),
-                  ),
+                  )
                 ],
               ),
             ),
@@ -67,12 +68,8 @@ class _LoginPageState extends State<LoginPage> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   const Text(
-                    "Faça o login",
-                    style: TextStyle(
-                      color: Color.fromRGBO(49, 39, 79, 1),
-                      fontWeight: FontWeight.bold,
-                      fontSize: 30,
-                    ),
+                    "Registre-se",
+                    style: TextStyle(color: Color.fromRGBO(49, 39, 79, 1), fontWeight: FontWeight.bold, fontSize: 30),
                   ),
                   const SizedBox(height: 30),
                   Container(
@@ -84,11 +81,29 @@ class _LoginPageState extends State<LoginPage> {
                           color: Color.fromRGBO(196, 135, 198, .3),
                           blurRadius: 20,
                           offset: Offset(0, 10),
-                        ),
+                        )
                       ],
                     ),
                     child: Column(
                       children: [
+                        Container(
+                          padding: const EdgeInsets.all(10),
+                          decoration: const BoxDecoration(
+                            border: Border(
+                              bottom: BorderSide(color: Colors.grey),
+                            ),
+                          ),
+                          child: TextField(
+                            controller: _displayNameController,
+                            decoration: const InputDecoration(
+                              border: InputBorder.none,
+                              hintText: "Nome",
+                              hintStyle: TextStyle(
+                                color: Colors.grey,
+                              ),
+                            ),
+                          ),
+                        ),
                         Container(
                           padding: const EdgeInsets.all(10),
                           decoration: const BoxDecoration(
@@ -109,6 +124,11 @@ class _LoginPageState extends State<LoginPage> {
                         ),
                         Container(
                           padding: const EdgeInsets.all(10),
+                          decoration: const BoxDecoration(
+                            border: Border(
+                              bottom: BorderSide(color: Colors.grey),
+                            ),
+                          ),
                           child: TextField(
                             controller: _passwordController,
                             decoration: const InputDecoration(
@@ -121,21 +141,20 @@ class _LoginPageState extends State<LoginPage> {
                             obscureText: true,
                           ),
                         ),
-                      ],
-                    ),
-                  ),
-                  const SizedBox(height: 5),
-                  InkWell(
-                    onTap: () {
-                      Navigator.push(context, MaterialPageRoute(builder: (context) => const ForgotPasswordPage()));
-                    },
-                    child: const Row(
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      children: [
-                        Text(
-                          'Esqueceu sua senha?',
-                          style: TextStyle(fontWeight: FontWeight.w600),
-                        )
+                        Container(
+                          padding: const EdgeInsets.all(10),
+                          child: TextField(
+                            controller: _confirmPasswordController,
+                            decoration: const InputDecoration(
+                              border: InputBorder.none,
+                              hintText: "Confirme sua senha",
+                              hintStyle: TextStyle(
+                                color: Colors.grey,
+                              ),
+                            ),
+                            obscureText: true,
+                          ),
+                        ),
                       ],
                     ),
                   ),
@@ -145,28 +164,78 @@ class _LoginPageState extends State<LoginPage> {
                       onTap: () async {
                         String email = _emailController.text.trim();
                         String password = _passwordController.text.trim();
-                        try {
-                          await authProvider.login(email, password);
-                          Navigator.pushReplacementNamed(
-                            context,
-                            '/mainPage',
-                          );
-                        } catch (e) {
+                        String confirmPassword = _confirmPasswordController.text.trim();
+                        String displayName = _displayNameController.text;
+                        if (email.isEmpty || password.isEmpty || confirmPassword.isEmpty) {
                           showDialog(
                             context: context,
                             builder: (context) {
                               return AlertDialog(
                                 title: const Text("Erro"),
-                                content: Text(e.toString()),
+                                content: const Text("Preencha todos os campos."),
                                 actions: [
                                   TextButton(
-                                    onPressed: () => Navigator.of(context).pop(),
+                                    onPressed: () {
+                                      Navigator.pop(context);
+                                    },
                                     child: const Text("OK"),
                                   ),
                                 ],
                               );
                             },
                           );
+                          return;
+                        }
+                        if (password != confirmPassword) {
+                          showDialog(
+                            context: context,
+                            builder: (context) {
+                              return AlertDialog(
+                                title: const Text("Erro"),
+                                content: const Text("As senhas não correspondem."),
+                                actions: [
+                                  TextButton(
+                                    onPressed: () {
+                                      Navigator.pop(context);
+                                    },
+                                    child: const Text("OK"),
+                                  ),
+                                ],
+                              );
+                            },
+                          );
+                          return;
+                        }
+
+                        final success = await authProvider.register(email, password, confirmPassword, displayName);
+                        if (success) {
+                          showDialog(
+                            context: context,
+                            builder: (context) {
+                              return AlertDialog(
+                                title: const Text("Registro Concluído"),
+                                content: const Text("Você foi registrado com sucesso!"),
+                                actions: [
+                                  TextButton(
+                                    onPressed: () {
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder: (context) => const LoginPage(),
+                                        ),
+                                      );
+                                    },
+                                    child: const Text("OK"),
+                                  ),
+                                ],
+                              );
+                            },
+                          );
+                        } else {
+                          setState(() {
+                            _isError = true;
+                            _errorMessage = "Já existe uma conta com este e-mail.";
+                          });
                         }
                       },
                       child: Container(
@@ -178,38 +247,34 @@ class _LoginPageState extends State<LoginPage> {
                         ),
                         child: const Center(
                           child: Text(
-                            "ENTRAR",
-                            style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+                            "Registrar",
+                            style: TextStyle(
+                              color: Colors.white,
+                            ),
                           ),
                         ),
                       ),
                     ),
                   ),
-                  const SizedBox(height: 10),
+                  const SizedBox(height: 15),
                   Center(
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         const Text(
-                          'Não tem uma conta?',
+                          'Já é registrado?',
                           style: TextStyle(fontSize: 14),
                         ),
                         InkWell(
                           onTap: () {
                             Navigator.push(
                               context,
-                              MaterialPageRoute(
-                                builder: (context) => const RegisterPage(),
-                              ),
+                              MaterialPageRoute(builder: (context) => const LoginPage()),
                             );
                           },
                           child: const Text(
-                            ' Cadastre-se.',
-                            style: TextStyle(
-                              fontSize: 14,
-                              fontWeight: FontWeight.bold,
-                              color: Color.fromRGBO(49, 39, 79, 1),
-                            ),
+                            ' Faça o login.',
+                            style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: Color.fromRGBO(49, 39, 79, 1)),
                           ),
                         ),
                       ],

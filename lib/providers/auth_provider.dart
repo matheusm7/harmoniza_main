@@ -30,7 +30,7 @@ class AuthProvider with ChangeNotifier {
     }
   }
 
-  Future<bool> register(String email, String password, String confirmPassword) async {
+  Future<bool> register(String email, String password, String confirmPassword, String displayName) async {
     try {
       if (email.isEmpty || password.isEmpty || confirmPassword.isEmpty) {
         throw 'Preencha todos os campos.';
@@ -44,7 +44,9 @@ class AuthProvider with ChangeNotifier {
         email: email,
         password: password,
       );
+      await userCredential.user?.updateDisplayName(displayName);
       _user = userCredential.user;
+
       notifyListeners();
       return true;
     } on FirebaseAuthException catch (e) {
