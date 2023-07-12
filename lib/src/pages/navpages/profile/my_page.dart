@@ -47,7 +47,7 @@ class _MyPageState extends State<MyPage> {
                   ],
                 ),
                 const SizedBox(height: 5),
-                Text(FirebaseAuth.instance.currentUser?.displayName ?? '', style: Theme.of(context).textTheme.titleLarge),
+                Text(FirebaseAuth.instance.currentUser!.displayName!, style: Theme.of(context).textTheme.titleLarge),
                 const SizedBox(height: 5),
                 Text(FirebaseAuth.instance.currentUser!.email!, style: Theme.of(context).textTheme.bodyMedium),
                 SizedBox(
