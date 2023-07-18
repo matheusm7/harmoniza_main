@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -14,6 +15,8 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     Color dourado = const Color.fromARGB(255, 168, 138, 78);
+    final currentUser = FirebaseAuth.instance.currentUser;
+    final imageUrl = currentUser?.photoURL;
 
     return Scaffold(
       backgroundColor: Colors.grey[300],
@@ -27,13 +30,11 @@ class _HomePageState extends State<HomePage> {
                 children: [
                   const Icon(Icons.menu, size: 30, color: Colors.black54),
                   Expanded(child: Container()),
-                  Container(
-                    margin: const EdgeInsets.only(right: 20),
-                    width: 50,
-                    height: 50,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(10),
-                      color: Colors.grey.withOpacity(0.5),
+                  Padding(
+                    padding: const EdgeInsets.only(right: 16),
+                    child: CircleAvatar(
+                      radius: 22,
+                      backgroundImage: imageUrl != null ? NetworkImage(imageUrl) : null,
                     ),
                   ),
                 ],

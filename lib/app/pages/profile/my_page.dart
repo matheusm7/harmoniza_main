@@ -1,9 +1,9 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:harmoniza_ativos/app/data/data.dart';
 import 'package:harmoniza_ativos/app/pages/profile/edit/edit_profile.dart';
 import 'package:harmoniza_ativos/app/pages/profile/support/support_page_profile.dart';
-import 'package:harmoniza_ativos/data/data.dart';
 
 class MyPage extends StatefulWidget {
   const MyPage({super.key});
@@ -13,11 +13,14 @@ class MyPage extends StatefulWidget {
 }
 
 class _MyPageState extends State<MyPage> {
+  String displayName = '';
   bool login = false;
 
   @override
   Widget build(BuildContext context) {
     Color dourado = const Color.fromARGB(255, 182, 154, 94);
+    final currentUser = FirebaseAuth.instance.currentUser;
+    final imageUrl = currentUser?.photoURL;
 
     return SafeArea(
       child: Scaffold(
@@ -37,18 +40,15 @@ class _MyPageState extends State<MyPage> {
             padding: const EdgeInsets.all(15),
             child: Column(
               children: [
-                const Stack(
-                  children: [
-                    CircleAvatar(
-                      radius: 64,
-                      backgroundImage: NetworkImage('https://images.are.na/eyJidWNrZXQiOiJhcmVuYV9pbWFnZXMiLCJrZXkiOiI4MDQwOTc0L29yaWdpbmFsX2ZmNGYxZjQzZDdiNzJjYzMxZDJlYjViMDgyN2ZmMWFjLnBuZyIsImVkaXRzIjp7InJlc2l6ZSI6eyJ3aWR0aCI6MTIwMCwiaGVpZ2h0IjoxMjAwLCJmaXQiOiJpbnNpZGUiLCJ3aXRob3V0RW5sYXJnZW1lbnQiOnRydWV9LCJ3ZWJwIjp7InF1YWxpdHkiOjkwfSwianBlZyI6eyJxdWFsaXR5Ijo5MH0sInJvdGF0ZSI6bnVsbH19?bc=0'),
-                    ),
-                  ],
+                CircleAvatar(
+                  radius: 64,
+                  backgroundImage: imageUrl != null ? NetworkImage(imageUrl) : null,
                 ),
                 const SizedBox(height: 5),
-                Text(FirebaseAuth.instance.currentUser!.displayName!, style: Theme.of(context).textTheme.titleLarge),
+                Text(FirebaseAuth.instance.currentUser?.displayName ?? displayName, style: Theme.of(context).textTheme.titleLarge),
                 const SizedBox(height: 5),
                 Text(FirebaseAuth.instance.currentUser!.email!, style: Theme.of(context).textTheme.bodyMedium),
+                const SizedBox(height: 5),
                 SizedBox(
                   width: 200,
                   height: 50,

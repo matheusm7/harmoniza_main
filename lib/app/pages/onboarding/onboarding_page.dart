@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:harmoniza_ativos/app/data/data.dart';
 import 'package:harmoniza_ativos/app/pages/login/login_page.dart';
-import 'package:harmoniza_ativos/data/data.dart';
 
 class OnBoarding extends StatefulWidget {
   const OnBoarding({super.key});

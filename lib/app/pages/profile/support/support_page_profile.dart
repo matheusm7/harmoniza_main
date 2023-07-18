@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:harmoniza_ativos/data/data.dart';
+import 'package:harmoniza_ativos/app/data/data.dart';
 
 class SupportPageProfile extends StatefulWidget {
   const SupportPageProfile({super.key});

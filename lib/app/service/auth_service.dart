@@ -30,7 +30,7 @@ class AuthProvider with ChangeNotifier {
     }
   }
 
-  Future<bool> register(String email, String password, String confirmPassword, String displayName) async {
+  Future<bool> register(String email, String password, String confirmPassword, displayName) async {
     try {
       if (email.isEmpty || password.isEmpty || confirmPassword.isEmpty) {
         throw 'Preencha todos os campos.';

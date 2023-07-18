@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-import '../../../data/data.dart';
+import '../../data/data.dart';
 
 class QueryDefinition extends StatefulWidget {
   const QueryDefinition({super.key});

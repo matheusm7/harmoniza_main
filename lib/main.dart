@@ -1,14 +1,15 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'package:harmoniza_ativos/providers/auth_provider.dart';
-import 'package:harmoniza_ativos/src/pages/navpages/actives.dart';
-import 'package:harmoniza_ativos/src/pages/navpages/bottom_navigation_bar.dart';
-import 'package:harmoniza_ativos/src/pages/navpages/homepage/home_page.dart';
-import 'package:harmoniza_ativos/src/pages/navpages/login/login_page.dart';
-import 'package:harmoniza_ativos/src/pages/navpages/register/register_page.dart';
+import 'package:harmoniza_ativos/app/pages/consultation/query_definition_page.dart';
+import 'package:harmoniza_ativos/app/service/auth_service.dart';
 import 'package:provider/provider.dart';
 
-import 'src/pages/navpages/consultation/asset_classes_page.dart';
+import 'app/pages/consultation/actives.dart';
+import 'app/pages/consultation/asset_classes_page.dart';
+import 'app/pages/homepage/home_page.dart';
+import 'app/pages/login/login_page.dart';
+import 'app/pages/main_page.dart';
+import 'app/pages/register/register_page.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -32,10 +33,13 @@ class MyApp extends StatelessWidget {
           '/registerPage': (context) => const RegisterPage(),
           '/assetClasses': (context) => const AssetClassesPage(),
           '/homePage': (context) => const HomePage(),
-          '/activesPage': (context) => const ActivesPage(),
+          '/activesPage': (context) => const ActivesPage(
+                subclasses: [],
+                classNames: [],
+              ),
         },
         debugShowCheckedModeBanner: false,
-        home: const LoginPage(),
+        home: const QueryDefinition(),
       ),
     );
   }

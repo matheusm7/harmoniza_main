@@ -1,7 +1,7 @@
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
-import 'package:harmoniza_ativos/data/data.dart';
+import 'package:harmoniza_ativos/app/data/data.dart';
 
 class FrostedGlassBox extends StatelessWidget {
   const FrostedGlassBox({super.key, this.theWidth, this.theHeight, this.theChild});

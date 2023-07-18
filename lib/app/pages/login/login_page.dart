@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:harmoniza_ativos/app/pages/register/register_page.dart';
 import 'package:provider/provider.dart';
 
-import '../../../providers/auth_provider.dart';
 import '../../controller/forgot_password_page.dart';
+import '../../service/auth_service.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({Key? key}) : super(key: key);

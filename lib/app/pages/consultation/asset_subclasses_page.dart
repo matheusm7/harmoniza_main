@@ -17,11 +17,18 @@ class _AssetSubclassesPageState extends State<AssetSubclassesPage> {
   Color dourado = const Color.fromARGB(255, 168, 138, 78);
   List<List<String>> subclasses = [
     ['C.ACNESS', 'DHT'],
-    ['Nike', 'Adidas'],
-    ['Arroz', 'Feijão'],
-    ['Energetico', 'Vinho'],
+    ['Antisséptico', 'Bactericida'],
+    ['AQP-3', 'Cálcio'],
+    ['Corticoide-Like', 'Inflamação Neurogênica'],
   ];
   List<List<bool>> selectedSubclasses = [];
+
+  List<String> classNames = [
+    'Anti-Acne',
+    'Microbiota Cutânea',
+    'Barreira Cutânea',
+    'Anti-inflamatório',
+  ];
 
   @override
   void initState() {
@@ -33,11 +40,13 @@ class _AssetSubclassesPageState extends State<AssetSubclassesPage> {
 
   void navigateToActivesPage() {
     List<String> selectedTexts = [];
+    List<String> selectedClassNames = [];
 
     for (int i = 0; i < selectedSubclasses.length; i++) {
       for (int j = 0; j < selectedSubclasses[i].length; j++) {
         if (selectedSubclasses[i][j]) {
           selectedTexts.add(getSelectedText(i, j));
+          selectedClassNames.add(classNames[i]);
         }
       }
     }
@@ -45,32 +54,13 @@ class _AssetSubclassesPageState extends State<AssetSubclassesPage> {
     Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (context) => ActivesPage(subclasses: selectedTexts),
+        builder: (context) => ActivesPage(subclasses: selectedTexts, classNames: selectedClassNames),
       ),
     );
   }
 
   String getSelectedText(int assetClassIndex, int subclassIndex) {
-    switch (subclasses[assetClassIndex][subclassIndex]) {
-      case 'C.ACNESS':
-        return 'Bom';
-      case 'DHT':
-        return 'Ruim';
-      case 'Nike':
-        return 'Legal';
-      case 'Adidas':
-        return 'Epa';
-      case 'Arroz':
-        return 'Ótimo';
-      case 'Feijão':
-        return 'Maravilhas';
-      case 'Energetico':
-        return 'Queimou';
-      case 'Vinho':
-        return 'Brabo';
-      default:
-        return 'Texto Padrão';
-    }
+    return subclasses[assetClassIndex][subclassIndex];
   }
 
   @override
@@ -102,16 +92,7 @@ class _AssetSubclassesPageState extends State<AssetSubclassesPage> {
                   int assetClassIndex = widget.selectedAssetClasses[index];
                   List<String> assetSubclasses = subclasses[assetClassIndex];
 
-                  String className = '';
-                  if (assetClassIndex == 0) {
-                    className = 'ANTI-ACNE';
-                  } else if (assetClassIndex == 1) {
-                    className = 'Marcas';
-                  } else if (assetClassIndex == 2) {
-                    className = 'Comidas';
-                  } else if (assetClassIndex == 3) {
-                    className = 'Bebidas';
-                  }
+                  String className = classNames[assetClassIndex];
 
                   return Column(
                     crossAxisAlignment: CrossAxisAlignment.start,

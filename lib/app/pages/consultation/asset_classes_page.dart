@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:harmoniza_ativos/app/data/data.dart';
 import 'package:harmoniza_ativos/app/pages/consultation/asset_subclasses_page.dart';
 import 'package:harmoniza_ativos/app/pages/consultation/query_definition_page.dart';
-import 'package:harmoniza_ativos/data/data.dart';
 
 class AssetClassesPage extends StatefulWidget {
   const AssetClassesPage({super.key});
@@ -18,6 +18,7 @@ class _AssetClassesPageState extends State<AssetClassesPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.grey[300],
       body: Padding(
         padding: const EdgeInsets.all(8),
         child: Column(
@@ -44,11 +45,11 @@ class _AssetClassesPageState extends State<AssetClassesPage> {
                 if (index == 0) {
                   categoryName = 'Anti-acne';
                 } else if (index == 1) {
-                  categoryName = 'Marcas';
+                  categoryName = 'Microbiota Cutânea';
                 } else if (index == 2) {
-                  categoryName = 'Comidas';
+                  categoryName = 'Barreira Cutânea';
                 } else if (index == 3) {
-                  categoryName = 'Bebidas';
+                  categoryName = 'Anti-inflamatórios';
                 }
                 return CheckboxListTile(
                   activeColor: douradoEscuro,
