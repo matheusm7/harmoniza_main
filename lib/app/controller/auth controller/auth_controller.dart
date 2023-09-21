@@ -1,11 +1,15 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
-class AuthProvider with ChangeNotifier {
+class AuthController with ChangeNotifier {
+  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   final FirebaseAuth _auth = FirebaseAuth.instance;
   User? _user;
 
   User? get user => _user;
+
+  getListSelectedMedication() {}
 
   Future<bool> login(String email, String password) async {
     try {
@@ -63,5 +67,42 @@ class AuthProvider with ChangeNotifier {
     await _auth.signOut();
     _user = null;
     notifyListeners();
+  }
+
+  Future<bool> salvarDadosPaciente(String nome, String descricao) async {
+    try {
+      if (_user == null) {
+        throw 'Usuário não autenticado.';
+      }
+
+      final userId = _user!.uid;
+      await _firestore.collection('pacientes').doc(userId).set({
+        'nome': nome,
+        'descricao': descricao,
+      });
+
+      return true;
+    } catch (e) {
+      throw 'Erro ao salvar os dados do paciente: $e';
+    }
+  }
+
+  Future<Map<String, dynamic>?> recuperarDadosPaciente() async {
+    try {
+      if (_user == null) {
+        throw 'Usuário não autenticado.';
+      }
+
+      final userId = _user!.uid;
+      final document = await _firestore.collection('pacientes').doc(userId).get();
+
+      if (document.exists) {
+        return document.data() as Map<String, dynamic>;
+      } else {
+        return null; // Não foram encontrados dados do paciente para este usuário
+      }
+    } catch (e) {
+      throw 'Erro ao recuperar os dados do paciente: $e';
+    }
   }
 }

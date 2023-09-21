@@ -1,19 +1,30 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-import 'actives.dart';
-import 'asset_classes_page.dart';
+import '../actives page/actives.dart';
 
 class AssetSubclassesPage extends StatefulWidget {
+  final String nomeCompleto;
+  final String descricao;
   final List<int> selectedAssetClasses;
-
-  const AssetSubclassesPage({Key? key, required this.selectedAssetClasses}) : super(key: key);
+  final List<String> selectedMedications;
+  final bool isPorDiagnosticoSelected;
+  final Map<String, List<String>> selectedVehicleMap;
+  final bool isGestante;
+  final String periodo;
+  const AssetSubclassesPage({Key? key, required this.selectedAssetClasses, required this.selectedMedications, required this.isPorDiagnosticoSelected, required this.selectedVehicleMap, required this.descricao, required this.nomeCompleto, required this.isGestante, required this.periodo}) : super(key: key);
 
   @override
-  _AssetSubclassesPageState createState() => _AssetSubclassesPageState();
+  AssetSubclassesPageState createState() => AssetSubclassesPageState();
 }
 
-class _AssetSubclassesPageState extends State<AssetSubclassesPage> {
+class AssetSubclassesPageState extends State<AssetSubclassesPage> {
+  String nomeCompleto = '';
+  String descricao = '';
+  bool switchValue = false;
+  bool switchValue2 = false;
+  bool switchValue3 = false;
+  String? selectedValue = 'Diurno';
   Color dourado = const Color.fromARGB(255, 168, 138, 78);
   List<List<String>> subclasses = [
     ['C.ACNESS', 'DHT'],
@@ -51,10 +62,28 @@ class _AssetSubclassesPageState extends State<AssetSubclassesPage> {
       }
     }
 
+    if (selectedTexts.isEmpty) {
+      // Caso nenhuma subclasse seja selecionada, adicionamos todas as subclasses disponíveis
+      for (int i = 0; i < subclasses.length; i++) {
+        selectedTexts.addAll(subclasses[i]);
+        selectedClassNames.addAll(List<String>.filled(subclasses[i].length, classNames[i]));
+      }
+    }
+
     Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (context) => ActivesPage(subclasses: selectedTexts, classNames: selectedClassNames),
+        builder: (context) => ActivesPage(
+          descricao: widget.descricao,
+          nomeCompleto: widget.nomeCompleto,
+          selectedVehicleMap: widget.selectedVehicleMap,
+          isPorDiagnosticoSelected: widget.isPorDiagnosticoSelected,
+          subclasses: selectedTexts,
+          classNames: selectedClassNames,
+          selectedMedications: widget.selectedMedications,
+          isGestante: widget.isGestante,
+          periodo: widget.periodo,
+        ),
       ),
     );
   }
@@ -66,7 +95,7 @@ class _AssetSubclassesPageState extends State<AssetSubclassesPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.grey[300],
+      backgroundColor: Theme.of(context).colorScheme.background,
       body: Padding(
         padding: const EdgeInsets.all(8.0),
         child: Column(
@@ -76,7 +105,7 @@ class _AssetSubclassesPageState extends State<AssetSubclassesPage> {
               'assets/logo.png',
               width: 150,
             ),
-            const SizedBox(height: 50),
+            const SizedBox(height: 20),
             Text(
               'SUBCLASSES (Opcional)',
               style: GoogleFonts.poppins(
@@ -85,8 +114,10 @@ class _AssetSubclassesPageState extends State<AssetSubclassesPage> {
                 color: dourado,
               ),
             ),
+            const SizedBox(height: 10),
             Expanded(
               child: ListView.builder(
+                padding: EdgeInsets.zero,
                 itemCount: widget.selectedAssetClasses.length,
                 itemBuilder: (BuildContext context, int index) {
                   int assetClassIndex = widget.selectedAssetClasses[index];
@@ -99,19 +130,31 @@ class _AssetSubclassesPageState extends State<AssetSubclassesPage> {
                     children: [
                       Padding(
                         padding: const EdgeInsets.all(8.0),
-                        child: Text(
-                          className,
-                          style: GoogleFonts.poppins(fontSize: 16, fontWeight: FontWeight.bold),
+                        child: Row(
+                          children: [
+                            Text(
+                              '• ',
+                              style: TextStyle(color: dourado),
+                            ),
+                            Text(
+                              className,
+                              style: GoogleFonts.poppins(fontSize: 16, fontWeight: FontWeight.w500, color: dourado),
+                            ),
+                          ],
                         ),
                       ),
                       ListView.builder(
+                        padding: EdgeInsets.zero,
                         shrinkWrap: true,
                         physics: const ClampingScrollPhysics(),
                         itemCount: assetSubclasses.length,
                         itemBuilder: (BuildContext context, int index) {
                           return CheckboxListTile(
                             activeColor: dourado,
-                            title: Text(assetSubclasses[index]),
+                            title: Text(
+                              assetSubclasses[index],
+                              style: GoogleFonts.poppins(fontWeight: FontWeight.w300, color: dourado),
+                            ),
                             value: selectedSubclasses[assetClassIndex][index],
                             onChanged: (bool? value) {
                               setState(() {
@@ -159,11 +202,7 @@ class _AssetSubclassesPageState extends State<AssetSubclassesPage> {
               padding: const EdgeInsets.all(8),
               child: GestureDetector(
                 onTap: () {
-                  Navigator.of(context).push(
-                    MaterialPageRoute(
-                      builder: (context) => const AssetClassesPage(),
-                    ),
-                  );
+                  Navigator.pop(context);
                 },
                 child: Container(
                   decoration: BoxDecoration(
@@ -189,7 +228,7 @@ class _AssetSubclassesPageState extends State<AssetSubclassesPage> {
                   ),
                 ),
               ),
-            )
+            ),
           ],
         ),
       ),

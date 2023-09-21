@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:harmoniza_ativos/app/data/data.dart';
-import 'package:harmoniza_ativos/app/pages/login/login_page.dart';
+import 'package:harmoniza_ativos/app/pages/auth%20pages/login/login_page.dart';
 
 class OnBoarding extends StatefulWidget {
   const OnBoarding({super.key});
@@ -83,10 +83,9 @@ class _OnBoardingState extends State<OnBoarding> {
                 ElevatedButton(
                   onPressed: () {
                     if (currentIndex == contents.length - 1) {
-                      // Navegar para a próxima página
                       Navigator.push(
                         context,
-                        MaterialPageRoute(builder: (context) => const LoginPage()), // Substitua "NextPage" pela classe da próxima página
+                        MaterialPageRoute(builder: (context) => const LoginPage()),
                       );
                     }
                     _controller!.nextPage(duration: const Duration(milliseconds: 500), curve: Curves.easeInOut);

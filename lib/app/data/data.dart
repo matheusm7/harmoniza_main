@@ -39,7 +39,6 @@ const String tEditProfile = "Editar perfil";
 const String tLogoutDialogHeading = "Sair do sistema";
 const String tProfileHeading = "Matheus Melo";
 const String tProfileSubHeading = "matheusidmelo@gmail.com";
-
 // -- menu
 
 // -- Update profile screen
@@ -49,3 +48,20 @@ const String tJoinedAt = '31 October 2022';
 
 const Color dourado = Color.fromARGB(255, 234, 206, 150);
 Color douradoEscuro = const Color.fromARGB(255, 168, 138, 78);
+Color dourado2 = const Color.fromARGB(255, 93, 75, 43);
+
+class ActivesRow {
+  String title;
+  ActivesRow({
+    required this.title,
+  });
+}
+
+List<ActivesRow> activesRow = [
+  ActivesRow(
+    title: 'Texto 1',
+  ),
+  ActivesRow(
+    title: 'Texto 2',
+  ),
+];

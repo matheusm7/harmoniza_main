@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '../../service/auth_service.dart';
+import '../../../controller/auth controller/auth_controller.dart';
 import '../login/login_page.dart';
 
 class RegisterPage extends StatefulWidget {
@@ -22,7 +22,7 @@ class _RegisterPageState extends State<RegisterPage> {
   @override
   Widget build(BuildContext context) {
     final width = MediaQuery.of(context).size.width;
-    final authProvider = Provider.of<AuthProvider>(context);
+    final authProvider = Provider.of<AuthController>(context);
 
     return Scaffold(
       backgroundColor: Colors.white,
@@ -214,7 +214,10 @@ class _RegisterPageState extends State<RegisterPage> {
                             builder: (context) {
                               return AlertDialog(
                                 title: const Text("Registro Concluído"),
-                                content: const Text("Você foi registrado com sucesso!"),
+                                content: Text(
+                                  "Você foi registrado com sucesso!",
+                                  style: TextStyle(color: Theme.of(context).colorScheme.primary),
+                                ),
                                 actions: [
                                   TextButton(
                                     onPressed: () {

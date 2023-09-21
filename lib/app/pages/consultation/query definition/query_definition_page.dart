@@ -1,24 +1,32 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:harmoniza_ativos/app/pages/consultation/diagnostic/diagnostic_page.dart';
 
-import '../../data/data.dart';
+import '../../../data/data.dart';
 
 class QueryDefinition extends StatefulWidget {
-  const QueryDefinition({super.key});
+  final String nomeCompleto;
+  final String descricao;
+  bool isGestante;
+  String periodo;
+  QueryDefinition({super.key, required this.descricao, required this.nomeCompleto, required this.isGestante, required this.periodo});
 
   @override
   State<QueryDefinition> createState() => _QueryDefinitionState();
 }
 
 class _QueryDefinitionState extends State<QueryDefinition> {
+  String nomeCompleto = '';
+  String descricao = '';
   bool switchValue = false;
   bool switchValue2 = false;
   bool switchValue3 = false;
-  String? selectedValue;
+  String? selectedValue = 'Diurno';
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Theme.of(context).colorScheme.background,
       body: Padding(
         padding: const EdgeInsets.all(8),
         child: SingleChildScrollView(
@@ -29,16 +37,16 @@ class _QueryDefinitionState extends State<QueryDefinition> {
                 'assets/logo.png',
                 width: 150,
               ),
-              const SizedBox(height: 50),
+              const SizedBox(height: 20),
               Text(
                 'DEFINIÇÕES DA CONSULTA',
                 style: GoogleFonts.poppins(
-                  fontSize: 17,
+                  fontSize: 20,
                   color: douradoEscuro,
                   fontWeight: FontWeight.bold,
                 ),
               ),
-              const SizedBox(height: 30),
+              const SizedBox(height: 20),
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 20),
                 child: Row(
@@ -130,27 +138,37 @@ class _QueryDefinitionState extends State<QueryDefinition> {
                       selectedValue = value;
                     });
                   },
-                  hint: const Text('DIURNO'),
+                  hint: const Text('Diurno'),
                   underline: const SizedBox(),
                   isExpanded: true,
                   items: [
-                    "DIURNO",
-                    "NOTURNO",
-                    "AMBOS",
+                    "Diurno",
+                    "Noturno",
+                    "Ambos",
                   ]
                       .map<DropdownMenuItem<String?>>((e) => DropdownMenuItem(
-                            value: e,
+                            value: e, // Cada item deve ter um valor único.
                             child: Text(e.toString()),
                           ))
                       .toList(),
                 ),
               ),
-              const SizedBox(height: 130),
+              const SizedBox(height: 170),
               Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: GestureDetector(
                   onTap: () {
-                    Navigator.pushNamed(context, '/assetClasses');
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => DiagnosticPage(
+                          descricao: widget.descricao,
+                          nomeCompleto: widget.nomeCompleto,
+                          isGestante: switchValue,
+                          periodo: selectedValue ?? 'Diurno',
+                        ),
+                      ),
+                    );
                   },
                   child: Container(
                     decoration: BoxDecoration(borderRadius: BorderRadius.circular(10), color: douradoEscuro),

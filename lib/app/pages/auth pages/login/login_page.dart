@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:harmoniza_ativos/app/pages/register/register_page.dart';
+import 'package:harmoniza_ativos/app/pages/auth%20pages/register/register_page.dart';
 import 'package:provider/provider.dart';
 
-import '../../controller/forgot_password_page.dart';
-import '../../service/auth_service.dart';
+import '../../../controller/auth controller/auth_controller.dart';
+import '../../../controller/forgot_password_page.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({Key? key}) : super(key: key);
@@ -21,7 +21,7 @@ class _LoginPageState extends State<LoginPage> {
   @override
   Widget build(BuildContext context) {
     final width = MediaQuery.of(context).size.width;
-    final authProvider = Provider.of<AuthProvider>(context);
+    final authProvider = Provider.of<AuthController>(context);
 
     return Scaffold(
       backgroundColor: Colors.grey[300],

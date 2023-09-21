@@ -4,6 +4,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:harmoniza_ativos/app/data/data.dart';
 import 'package:harmoniza_ativos/app/pages/profile/edit/edit_profile.dart';
 import 'package:harmoniza_ativos/app/pages/profile/support/support_page_profile.dart';
+import 'package:harmoniza_ativos/app/pages/auth%20pages/login/login_page.dart';
 
 class MyPage extends StatefulWidget {
   const MyPage({super.key});
@@ -24,7 +25,7 @@ class _MyPageState extends State<MyPage> {
 
     return SafeArea(
       child: Scaffold(
-        backgroundColor: Colors.grey[300],
+        backgroundColor: Theme.of(context).colorScheme.background,
         appBar: AppBar(
           centerTitle: true,
           backgroundColor: Colors.transparent,
@@ -32,12 +33,12 @@ class _MyPageState extends State<MyPage> {
           automaticallyImplyLeading: false,
           title: Text(
             'Perfil',
-            style: GoogleFonts.poppins(color: Colors.black, fontWeight: FontWeight.w500),
+            style: GoogleFonts.poppins(fontWeight: FontWeight.w500),
           ),
         ),
         body: SingleChildScrollView(
           child: Container(
-            padding: const EdgeInsets.all(15),
+            padding: const EdgeInsets.symmetric(horizontal: 15),
             child: Column(
               children: [
                 CircleAvatar(
@@ -48,7 +49,7 @@ class _MyPageState extends State<MyPage> {
                 Text(FirebaseAuth.instance.currentUser?.displayName ?? displayName, style: Theme.of(context).textTheme.titleLarge),
                 const SizedBox(height: 5),
                 Text(FirebaseAuth.instance.currentUser!.email!, style: Theme.of(context).textTheme.bodyMedium),
-                const SizedBox(height: 5),
+                const SizedBox(height: 10),
                 SizedBox(
                   width: 200,
                   height: 50,
@@ -57,12 +58,14 @@ class _MyPageState extends State<MyPage> {
                     onPressed: () {
                       Navigator.push(context, MaterialPageRoute(builder: (context) => const EditProfile()));
                     },
-                    child: const Text(tEditProfile),
+                    child: Text(
+                      tEditProfile,
+                      style: GoogleFonts.poppins(color: Theme.of(context).colorScheme.primary, fontWeight: FontWeight.w500),
+                    ),
                   ),
                 ),
-                const SizedBox(height: 30),
-                const Divider(),
                 const SizedBox(height: 10),
+                const Divider(),
                 ProfileMenuWidget(
                   dourado: dourado,
                   title: "Configurações",
@@ -89,7 +92,8 @@ class _MyPageState extends State<MyPage> {
                   title: tLogoutDialogHeading,
                   icon: Icons.logout,
                   onPress: () async {
-                    await FirebaseAuth.instance.signOut();
+                    FirebaseAuth.instance.signOut();
+                    Navigator.of(context).pushReplacement(MaterialPageRoute(builder: ((context) => const LoginPage())));
                   },
                   endIcon: false,
                   textColor: Colors.red,

@@ -4,7 +4,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:harmoniza_ativos/app/data/data.dart';
 import 'package:harmoniza_ativos/app/pages/main_page.dart';
 
-import '../../../service/profile_service.dart';
+import '../../../controller/profile/profile_service.dart';
 
 class EditProfile extends StatefulWidget {
   const EditProfile({super.key});
@@ -63,7 +63,7 @@ class _EditProfileState extends State<EditProfile> {
                                 setState(
                                   () {
                                     // Atualiza a URL da imagem de perfil
-                                    user.updateProfile(photoURL: imageUrl);
+                                    user.updatePhotoURL(imageUrl);
                                   },
                                 );
                               }
@@ -89,7 +89,7 @@ class _EditProfileState extends State<EditProfile> {
                             setState(
                               () {
                                 // Atualiza a URL da imagem de perfil
-                                user.updateProfile(photoURL: imageUrl);
+                                user.updatePhotoURL(imageUrl);
                               },
                             );
                           }
@@ -116,6 +116,7 @@ class _EditProfileState extends State<EditProfile> {
                       FirebaseAuth.instance.currentUser!.updateDisplayName(displayName.text);
                       Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => const MainPage()));
                     } catch (e) {
+                      // ignore: avoid_print
                       print(e);
                     }
                   },

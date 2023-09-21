@@ -19,7 +19,7 @@ class _HomePageState extends State<HomePage> {
     final imageUrl = currentUser?.photoURL;
 
     return Scaffold(
-      backgroundColor: Colors.grey[300],
+      backgroundColor: Theme.of(context).colorScheme.background,
       body: SingleChildScrollView(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -28,7 +28,7 @@ class _HomePageState extends State<HomePage> {
               padding: const EdgeInsets.only(top: 50, left: 20),
               child: Row(
                 children: [
-                  const Icon(Icons.menu, size: 30, color: Colors.black54),
+                  Icon(Icons.menu, size: 30, color: Theme.of(context).colorScheme.primary),
                   Expanded(child: Container()),
                   Padding(
                     padding: const EdgeInsets.only(right: 16),
@@ -78,7 +78,7 @@ class _HomePageState extends State<HomePage> {
                             right: 0,
                             bottom: 0,
                             child: Container(
-                              color: Colors.white,
+                              color: Theme.of(context).colorScheme.secondary,
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [

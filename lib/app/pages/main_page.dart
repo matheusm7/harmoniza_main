@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:harmoniza_ativos/app/pages/monthly%20plans/bar_item_page.dart';
-import 'package:harmoniza_ativos/app/pages/profile/my_page.dart';
+import 'package:harmoniza_ativos/app/pages/profile/profile/my_page.dart';
 import 'package:harmoniza_ativos/app/pages/search%20page/search_page.dart';
 
 import 'homepage/home_page.dart';

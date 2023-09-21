@@ -1,24 +1,36 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:harmoniza_ativos/app/data/data.dart';
-import 'package:harmoniza_ativos/app/pages/consultation/asset_subclasses_page.dart';
-import 'package:harmoniza_ativos/app/pages/consultation/query_definition_page.dart';
+import 'package:harmoniza_ativos/app/pages/consultation/actives%20subclasses/asset_subclasses_page.dart';
 
 class AssetClassesPage extends StatefulWidget {
-  const AssetClassesPage({super.key});
+  final String nomeCompleto;
+  final String descricao;
+  final List<String> selectedMedications;
+  final bool isPorDiagnosticoSelected;
+  final Map<String, List<String>> selectedVehicleMap;
+  final bool isGestante;
+  final String periodo;
+  const AssetClassesPage({super.key, required this.selectedMedications, required this.isPorDiagnosticoSelected, required this.selectedVehicleMap, required this.descricao, required this.nomeCompleto, required this.isGestante, required this.periodo});
 
   @override
-  _AssetClassesPageState createState() => _AssetClassesPageState();
+  AssetClassesPageState createState() => AssetClassesPageState();
 }
 
-class _AssetClassesPageState extends State<AssetClassesPage> {
+class AssetClassesPageState extends State<AssetClassesPage> {
+  String nomeCompleto = '';
+  String descricao = '';
+  bool switchValue = false;
+  bool switchValue2 = false;
+  bool switchValue3 = false;
+  String? selectedValue = 'Diurno';
   List<int> selectedAssetClasses = [];
   Color dourado = const Color.fromARGB(255, 168, 138, 78);
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.grey[300],
+      backgroundColor: Theme.of(context).colorScheme.background,
       body: Padding(
         padding: const EdgeInsets.all(8),
         child: Column(
@@ -28,7 +40,7 @@ class _AssetClassesPageState extends State<AssetClassesPage> {
               'assets/logo.png',
               width: 150,
             ),
-            const SizedBox(height: 50),
+            const SizedBox(height: 20),
             Text(
               'CLASSE DE ATIVOS',
               style: GoogleFonts.poppins(
@@ -37,8 +49,10 @@ class _AssetClassesPageState extends State<AssetClassesPage> {
                 color: dourado,
               ),
             ),
+            const SizedBox(height: 10),
             Expanded(
                 child: ListView.builder(
+              padding: EdgeInsets.zero,
               itemCount: 4,
               itemBuilder: (BuildContext context, int index) {
                 String categoryName = "";
@@ -55,7 +69,7 @@ class _AssetClassesPageState extends State<AssetClassesPage> {
                   activeColor: douradoEscuro,
                   title: Text(
                     categoryName,
-                    style: GoogleFonts.poppins(fontSize: 16),
+                    style: GoogleFonts.poppins(fontWeight: FontWeight.w500, color: dourado),
                   ),
                   value: selectedAssetClasses.contains(index),
                   onChanged: (bool? value) {
@@ -76,8 +90,16 @@ class _AssetClassesPageState extends State<AssetClassesPage> {
                 onTap: () {
                   Navigator.of(context).push(
                     MaterialPageRoute(
-                      builder: (context) => AssetSubclassesPage(selectedAssetClasses: selectedAssetClasses),
-                    ),
+                        builder: (context) => AssetSubclassesPage(
+                              descricao: widget.descricao,
+                              nomeCompleto: widget.nomeCompleto,
+                              selectedVehicleMap: widget.selectedVehicleMap,
+                              isPorDiagnosticoSelected: widget.isPorDiagnosticoSelected,
+                              selectedAssetClasses: selectedAssetClasses,
+                              selectedMedications: widget.selectedMedications,
+                              isGestante: widget.isGestante,
+                              periodo: widget.periodo,
+                            )),
                   );
                 },
                 child: Container(
@@ -109,11 +131,7 @@ class _AssetClassesPageState extends State<AssetClassesPage> {
               padding: const EdgeInsets.all(8),
               child: GestureDetector(
                 onTap: () {
-                  Navigator.of(context).push(
-                    MaterialPageRoute(
-                      builder: (context) => const QueryDefinition(),
-                    ),
-                  );
+                  Navigator.pop(context);
                 },
                 child: Container(
                   decoration: BoxDecoration(
