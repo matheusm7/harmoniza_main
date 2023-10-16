@@ -31,7 +31,6 @@ class GeneratePdf extends StatefulWidget {
 
 class _GeneratePdfState extends State<GeneratePdf> {
   List<String> valoresDosCampos = [];
-  String observacao = '';
   late List<TextEditingController> _controllers;
   late List<String> errorMessages;
   int currentIndex = -1;
@@ -41,6 +40,7 @@ class _GeneratePdfState extends State<GeneratePdf> {
   bool switchValue2 = false;
   bool switchValue3 = false;
   String? selectedValue = 'Diurno';
+  final Map<String, String> observacoesVeiculos = {};
 
   @override
   void initState() {
@@ -64,13 +64,16 @@ class _GeneratePdfState extends State<GeneratePdf> {
       if (parsedValue >= min && parsedValue <= max) {
         setState(() {
           errorMessages[i] = '';
-          valoresDosCampos[i] = value;
         });
       } else {
         setState(() {
           errorMessages[i] = 'Valor fora do intervalo recomendado';
         });
       }
+
+      setState(() {
+        valoresDosCampos[i] = value;
+      });
     } else {
       setState(() {
         errorMessages[i] = '';
@@ -304,6 +307,7 @@ class _GeneratePdfState extends State<GeneratePdf> {
               child: Column(
                 children: [
                   ...widget.selectedVehicleMap.entries.map((entry) {
+
                     String medication = entry.key;
                     List<String> vehicles = entry.value;
 
@@ -358,9 +362,7 @@ class _GeneratePdfState extends State<GeneratePdf> {
                                   padding: const EdgeInsets.only(top: 8),
                                   child: TextFormField(
                                     onChanged: (value) {
-                                      setState(() {
-                                        observacao = value;
-                                      });
+                                      observacoesVeiculos[vehicles[0]] = value; 
                                     },
                                     decoration: const InputDecoration(
                                       hintText: 'Observação...',
@@ -490,13 +492,13 @@ class _GeneratePdfState extends State<GeneratePdf> {
                   MaterialPageRoute(
                     builder: (context) => PdfPage(
                       periodo: widget.periodo,
-                      nomePaciente: widget.nomeCompleto,
+                      nomeCompleto: widget.nomeCompleto,
                       descricao: widget.descricao,
                       isGestante: widget.isGestante,
                       selectedActives: widget.selectedActives,
                       valoresDosCampos: valoresDosCampos,
-                      selectedVehicle: widget.selectedVehicle,
-                      observacao: observacao,
+                      selectedVehicles: widget.selectedVehicleMap.values.expand((vehicles) => vehicles).toList(),
+                      observacoesVeiculos: observacoesVeiculos,
                     ),
                   ),
                 );

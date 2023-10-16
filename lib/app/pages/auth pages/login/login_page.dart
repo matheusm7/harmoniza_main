@@ -3,7 +3,7 @@ import 'package:harmoniza_ativos/app/pages/auth%20pages/register/register_page.d
 import 'package:provider/provider.dart';
 
 import '../../../controller/auth controller/auth_controller.dart';
-import '../../../controller/forgot_password_page.dart';
+import '../forgot password/forgot_password_page.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({Key? key}) : super(key: key);
@@ -24,7 +24,7 @@ class _LoginPageState extends State<LoginPage> {
     final authProvider = Provider.of<AuthController>(context);
 
     return Scaffold(
-      backgroundColor: Colors.grey[300],
+      backgroundColor: Theme.of(context).colorScheme.background,
       body: SingleChildScrollView(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -97,6 +97,7 @@ class _LoginPageState extends State<LoginPage> {
                             ),
                           ),
                           child: TextField(
+                            style: const TextStyle(color: Colors.black),
                             controller: _emailController,
                             decoration: const InputDecoration(
                               border: InputBorder.none,
@@ -110,6 +111,7 @@ class _LoginPageState extends State<LoginPage> {
                         Container(
                           padding: const EdgeInsets.all(10),
                           child: TextField(
+                            style: const TextStyle(color: Colors.black),
                             controller: _passwordController,
                             decoration: const InputDecoration(
                               border: InputBorder.none,
@@ -147,6 +149,7 @@ class _LoginPageState extends State<LoginPage> {
                         String password = _passwordController.text.trim();
                         try {
                           await authProvider.login(email, password);
+                          // ignore: use_build_context_synchronously
                           Navigator.pushReplacementNamed(
                             context,
                             '/mainPage',

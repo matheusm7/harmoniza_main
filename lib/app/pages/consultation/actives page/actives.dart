@@ -66,6 +66,7 @@ class _ActivesPageState extends State<ActivesPage> {
   int _currentPageIndex = 0;
   Color douradoEscuro = const Color.fromARGB(255, 168, 138, 78);
   List<bool> _isCheckedList = [];
+  bool isAtLeastOneActiveSelected = false;
 
   List<Map<String, String>> infoList = [
     {
@@ -358,6 +359,7 @@ class _ActivesPageState extends State<ActivesPage> {
                     onChanged: (bool? newValue) {
                       setState(() {
                         _isCheckedList[index] = newValue ?? false;
+                        isAtLeastOneActiveSelected = _isCheckedList.contains(true);
                       });
                     },
                     title: Text(
@@ -380,7 +382,14 @@ class _ActivesPageState extends State<ActivesPage> {
               padding: const EdgeInsets.all(8),
               child: GestureDetector(
                 onTap: () {
-                  _navigateToIntermediatePage(_getSelectedActives());
+                  if (isAtLeastOneActiveSelected) {
+                    _navigateToIntermediatePage(_getSelectedActives());
+                  } else {
+                    final snackBar = const SnackBar(
+                      content: Text('Por favor, selecione pelo menos uma opção.'),
+                    );
+                    ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                  }
                 },
                 child: Container(
                   decoration: BoxDecoration(
@@ -498,7 +507,7 @@ class FavoritesPage extends StatelessWidget {
                 itemBuilder: (BuildContext context, int index) {
                   if (index < selectedSubclasses.length && index < selectedClassNames.length) {
                     String subclass = selectedSubclasses[index];
-                    String customTitle = getCustomTitle(subclass); // Pass 'subclass' to getCustomTitle
+                    String customTitle = getCustomTitle(subclass); 
                     String className = selectedClassNames[index];
 
                     return CheckboxListTile(

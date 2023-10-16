@@ -17,15 +17,15 @@ class _EditProfileState extends State<EditProfile> {
   final ProfileService _profileService = ProfileService();
 
   var displayName = TextEditingController();
+  bool _isLoading = false;
 
   @override
   Widget build(BuildContext context) {
-    // Obtenha a URL da imagem de perfil atual do usuário
     final currentUser = FirebaseAuth.instance.currentUser;
     final imageUrl = currentUser?.photoURL;
 
     return Scaffold(
-      backgroundColor: Colors.grey[300],
+      backgroundColor: Theme.of(context).colorScheme.background,
       appBar: AppBar(
         centerTitle: true,
         backgroundColor: Colors.transparent,
@@ -52,6 +52,12 @@ class _EditProfileState extends State<EditProfile> {
                           radius: 64,
                           backgroundImage: imageUrl != null ? NetworkImage(imageUrl) : null,
                         ),
+                        if (_isLoading)
+                          const Positioned.fill(
+                            child: Center(
+                              child: CircularProgressIndicator(),
+                            ),
+                          ),
                         Positioned(
                           bottom: 0,
                           right: 0,
@@ -62,8 +68,8 @@ class _EditProfileState extends State<EditProfile> {
                               if (imageUrl != null) {
                                 setState(
                                   () {
-                                    // Atualiza a URL da imagem de perfil
                                     user.updatePhotoURL(imageUrl);
+                                    _isLoading = true;
                                   },
                                 );
                               }
@@ -86,12 +92,10 @@ class _EditProfileState extends State<EditProfile> {
                           final user = FirebaseAuth.instance.currentUser;
                           final imageUrl = await _profileService.uploadProfilePicture(user!.uid);
                           if (imageUrl != null) {
-                            setState(
-                              () {
-                                // Atualiza a URL da imagem de perfil
-                                user.updatePhotoURL(imageUrl);
-                              },
-                            );
+                            setState(() {
+                              _isLoading = false;
+                              user.updatePhotoURL(imageUrl);
+                            });
                           }
                         },
                         icon: const Icon(Icons.camera_alt),
@@ -113,10 +117,16 @@ class _EditProfileState extends State<EditProfile> {
                   style: ElevatedButton.styleFrom(backgroundColor: douradoEscuro),
                   onPressed: () async {
                     try {
-                      FirebaseAuth.instance.currentUser!.updateDisplayName(displayName.text);
+                      final user = FirebaseAuth.instance.currentUser!;
+
+          
+                      if (displayName.text.isNotEmpty) {
+                        await user.updateDisplayName(displayName.text);
+                      }
+
                       Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => const MainPage()));
                     } catch (e) {
-                      // ignore: avoid_print
+            
                       print(e);
                     }
                   },

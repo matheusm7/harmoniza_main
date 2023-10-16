@@ -99,7 +99,7 @@ class AuthController with ChangeNotifier {
       if (document.exists) {
         return document.data() as Map<String, dynamic>;
       } else {
-        return null; // Não foram encontrados dados do paciente para este usuário
+        return null;
       }
     } catch (e) {
       throw 'Erro ao recuperar os dados do paciente: $e';

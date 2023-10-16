@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:harmoniza_ativos/app/controller/auth%20controller/auth_controller.dart';
 import 'package:harmoniza_ativos/app/data/theme/dark_theme.dart';
 import 'package:harmoniza_ativos/app/data/theme/light_theme.dart';
+import 'package:harmoniza_ativos/app/pages/consultation/pdf%20page/util/patient_data.dart';
+import 'package:harmoniza_ativos/app/pages/historic%20consultation/historic_consultation.dart';
 import 'package:provider/provider.dart';
 
 import 'app/controller/app state/app_state.dart';
@@ -10,6 +12,7 @@ import 'app/pages/auth pages/login/login_page.dart';
 import 'app/pages/auth pages/register/register_page.dart';
 import 'app/pages/consultation/actives classes/asset_classes_page.dart';
 import 'app/pages/consultation/actives page/actives.dart';
+import 'app/pages/consultation/vehicle/historic.dart';
 import 'app/pages/homepage/home_page.dart';
 import 'app/pages/main_page.dart';
 
@@ -28,11 +31,14 @@ class MyApp extends StatelessWidget {
       providers: [
         ChangeNotifierProvider(create: (_) => AuthController()),
         ChangeNotifierProvider(create: (_) => AppState()),
+        ChangeNotifierProvider(create: (_) => HistoricConsultationState()),
+        ChangeNotifierProvider(create: (_) => PatientData()),
       ],
       child: MaterialApp(
           theme: lightTheme,
           darkTheme: darkTheme,
           routes: {
+            '/historicConsultation': (context) => const HistoricConsultation(),
             '/mainPage': (context) => const MainPage(),
             '/loginPage': (context) => const LoginPage(),
             '/registerPage': (context) => const RegisterPage(),
@@ -59,7 +65,7 @@ class MyApp extends StatelessWidget {
                 ),
           },
           debugShowCheckedModeBanner: false,
-          home: const MainPage()),
+          home: const LoginPage()),
     );
   }
 }

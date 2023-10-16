@@ -8,4 +8,5 @@ ThemeData lightTheme = ThemeData(
     secondary: Colors.white,
     tertiary: Colors.grey[100]!,
   ),
+  primaryColor: Colors.black,
 );

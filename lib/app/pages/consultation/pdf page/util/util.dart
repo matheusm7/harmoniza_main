@@ -11,16 +11,16 @@ import 'package:printing/printing.dart';
 
 import 'my_category.dart';
 
-Future<Uint8List> generatePdf(
+Future<Uint8List> pdfbody(
   final PdfPageFormat format,
-  String nomePaciente,
+  String nomeCompleto,
   String descricao,
   bool isGestante,
   String periodo,
   List<String> selectedActives,
   List<String> valoresDosCampos,
-  String selectedVehicle,
-  String observacao,
+  List<String> selectedVehicles,
+  Map<String, String> observacoesVeiculos, 
 ) async {
   String displayName = '';
   final doc = pw.Document(
@@ -48,7 +48,6 @@ Future<Uint8List> generatePdf(
       pageTheme: pageTheme,
       build: (final context) {
         final List<pw.Widget> widgets = [];
-
         widgets.add(
           pw.Container(
             padding: const pw.EdgeInsets.only(left: 30, bottom: 20, top: 20, right: 30),
@@ -134,7 +133,7 @@ Future<Uint8List> generatePdf(
                         children: [
                           MyCategory('Paciente:'),
                           pw.Text(
-                            nomePaciente,
+                            nomeCompleto,
                             style: const pw.TextStyle(
                               fontSize: 20,
                             ),
@@ -163,54 +162,71 @@ Future<Uint8List> generatePdf(
                       ),
                     ),
                     pw.Divider(),
-                    // Adicione um loop para criar um widget para cada par de medicação e texto
+          
                     for (var i = 0; i < selectedActives.length; i++)
+                      pw.Padding(
+                        padding: const pw.EdgeInsets.symmetric(horizontal: 8),
+                        child: pw.Row(
+                          mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
+                          children: [
+                            pw.Text(
+                              subclassToCustomName[selectedActives[i]] ?? selectedActives[i],
+                              style: const pw.TextStyle(
+                                fontSize: 20,
+                              ),
+                            ),
+                            pw.Row(
+                              children: [
+                                pw.Text(
+                                  'Concentração: ',
+                                  style: const pw.TextStyle(
+                                    fontSize: 20,
+                                  ),
+                                ),
+                                pw.Text(
+                                  valoresDosCampos[i],
+                                  style: const pw.TextStyle(
+                                    fontSize: 20,
+                                  ),
+                                ),
+                                pw.Text(
+                                  '%',
+                                  style: const pw.TextStyle(
+                                    fontSize: 20,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
+                      ),
+                    pw.SizedBox(height: 90),
+             
+                    for (var i = 0; i < selectedVehicles.length; i++)
                       pw.Row(
-                        mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
                         children: [
+                          pw.SizedBox(width: 5),
                           pw.Text(
-                            subclassToCustomName[selectedActives[i]] ?? selectedActives[i],
+                            '${selectedVehicles[i]}, ', 
                             style: const pw.TextStyle(
                               fontSize: 20,
                             ),
                           ),
-                          pw.Row(
-                            children: [
-                              pw.Text(
-                                'Concentração: ',
-                                style: const pw.TextStyle(
-                                  fontSize: 20,
+                          pw.Align(
+                            alignment: pw.Alignment.centerLeft,
+                            child: pw.Row(
+                              children: [
+                                pw.Text(
+                                  observacoesVeiculos[selectedVehicles[i]] ?? '', 
+                                  style: const pw.TextStyle(
+                                    fontSize: 18,
+                                  ),
                                 ),
-                              ),
-                              pw.Text(
-                                valoresDosCampos[i], // Usar o valor da lista
-                                style: const pw.TextStyle(
-                                  fontSize: 20,
-                                ),
-                              ),
-                              pw.Text(
-                                '%', // Usar o valor da lista
-                                style: const pw.TextStyle(
-                                  fontSize: 20,
-                                ),
-                              ),
-                            ],
+                              ],
+                            ),
                           ),
                         ],
                       ),
-                    pw.SizedBox(
-                      height: 90,
-                    ),
-                    pw.Row(children: [
-                      pw.Text(
-                        '$selectedVehicle:', // Concatenar as duas strings aqui
-                        style: const pw.TextStyle(
-                          fontSize: 20,
-                        ),
-                      ),
-                      pw.SizedBox(width: 5),
-                      pw.Text(observacao, style: const pw.TextStyle(fontSize: 20)),
-                    ])
                   ],
                 ),
               ],
@@ -245,6 +261,7 @@ Future<void> saveAsFile(
   final bytes = await build(pageFormat);
   final appDocPath = await getApplicationDocumentsDirectory();
   final file = File('$appDocPath/document.pdf');
+
   print('save as file ${file.path}...');
   await file.writeAsBytes(bytes);
   await OpenFile.open(file.path);

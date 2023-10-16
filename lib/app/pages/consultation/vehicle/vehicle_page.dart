@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:harmoniza_ativos/app/pages/consultation/pdf%20page/generate_pdf.dart';
+import 'package:provider/provider.dart';
+
+import 'historic.dart';
 
 class VehiclePage extends StatefulWidget {
   final String nomeCompleto;
@@ -9,10 +12,10 @@ class VehiclePage extends StatefulWidget {
   final bool isPorDiagnosticoSelected;
   final Map<String, List<String>> selectedVehicleMap;
   final List<String> selectedActives;
-  bool isGestante;
-  String periodo;
+  final bool isGestante;
+  final String periodo;
 
-  VehiclePage({
+  const VehiclePage({
     Key? key,
     required this.selectedMedications,
     required this.isPorDiagnosticoSelected,
@@ -30,10 +33,9 @@ class VehiclePage extends StatefulWidget {
 
 class _VehiclePageState extends State<VehiclePage> {
   List<String> _selectedVehicles = [];
-
+  bool isVehicleSelectionValid = true;
   String nomeCompleto = '';
   String descricao = '';
-
   String? selectedValue = 'Diurno';
   final PageController _pageController = PageController(initialPage: 0);
   int _currentPageIndex = 0;
@@ -192,6 +194,21 @@ class _VehiclePageState extends State<VehiclePage> {
 
   @override
   Widget build(BuildContext context) {
+    final historicConsultationState = Provider.of<HistoricConsultationState>(context, listen: false);
+
+    final String nomeCompleto = widget.nomeCompleto;
+    final String descricao = widget.descricao;
+    final String periodo = widget.periodo;
+    final List<String> selectedActives = widget.selectedActives;
+
+    historicConsultationState.setHistoricConsultationInfo(
+      nomeCompleto: nomeCompleto,
+      descricao: descricao,
+      isGestante: widget.isGestante,
+      periodo: widget.periodo,
+      selectedActives: widget.selectedActives,
+    );
+
     return Scaffold(
       backgroundColor: Theme.of(context).colorScheme.background,
       body: Column(
@@ -220,7 +237,7 @@ class _VehiclePageState extends State<VehiclePage> {
                       return buildVehiclesPage(selectedMedication);
                     },
                   )
-                : buildVehiclesPage(widget.selectedMedications.first), // Mostra apenas uma lista para "única"
+                : buildVehiclesPage(widget.selectedMedications.first),
           ),
         ],
       ),
@@ -254,9 +271,9 @@ class _VehiclePageState extends State<VehiclePage> {
                       setState(() {
                         if (widget.isPorDiagnosticoSelected) {
                           if (newValue!) {
-                            widget.selectedVehicleMap[selectedMedication] = [vehicle]; // Substituir a lista existente por uma nova lista contendo apenas o veículo selecionado
+                            widget.selectedVehicleMap[selectedMedication] = [vehicle]; 
                           } else {
-                            widget.selectedVehicleMap[selectedMedication] = []; // Limpar a lista quando desmarcar a checkbox
+                            widget.selectedVehicleMap[selectedMedication] = []; 
                           }
                         } else {
                           if (newValue!) {
@@ -286,18 +303,92 @@ class _VehiclePageState extends State<VehiclePage> {
               padding: const EdgeInsets.all(8),
               child: GestureDetector(
                 onTap: () {
-                  if (widget.isPorDiagnosticoSelected) {
-                    // Verifique se todos os medicamentos têm pelo menos um veículo selecionado
-                    bool allMedicationsSelected = true;
-                    for (String medication in widget.selectedMedications) {
-                      if (widget.selectedVehicleMap[medication]!.isEmpty) {
-                        allMedicationsSelected = false;
-                        break;
-                      }
+                  bool atLeastOneMedicationSelected = false;
+                  for (String medication in widget.selectedMedications) {
+                    if (widget.selectedVehicleMap[medication] != null && widget.selectedVehicleMap[medication]!.isNotEmpty) {
+                      atLeastOneMedicationSelected = true;
+                      break;
                     }
+                  }
 
-                    if (allMedicationsSelected) {
-                      String selectedVehicle = widget.selectedVehicleMap[widget.selectedMedications[_currentPageIndex]]!.first;
+                  if (!atLeastOneMedicationSelected) {
+                
+                    showDialog(
+                      context: context,
+                      builder: (BuildContext context) {
+                        return AlertDialog(
+                          title: const Text('Erro'),
+                          content: const Text('Por favor, selecione pelo menos um veículo.'),
+                          actions: <Widget>[
+                            TextButton(
+                              onPressed: () {
+                                Navigator.of(context).pop(); 
+                              },
+                              child: const Text(
+                                'OK',
+                                style: TextStyle(color: Colors.black),
+                              ),
+                            ),
+                          ],
+                        );
+                      },
+                    );
+                  } else {
+          
+
+                    if (widget.isPorDiagnosticoSelected) {
+                  
+                      bool allMedicationsSelected = true;
+                      for (String medication in widget.selectedMedications) {
+                        if (widget.selectedVehicleMap[medication]!.isEmpty) {
+                          allMedicationsSelected = false;
+                          break;
+                        }
+                      }
+
+                      if (allMedicationsSelected) {
+                        String selectedVehicle = widget.selectedVehicleMap[widget.selectedMedications[_currentPageIndex]]!.first;
+                   
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => GeneratePdf(
+                              selectedActives: widget.selectedActives,
+                              descricao: widget.descricao,
+                              nomeCompleto: widget.nomeCompleto,
+                              isGestante: widget.isGestante,
+                              periodo: widget.periodo,
+                              selectedVehicle: selectedVehicle,
+                              selectedVehicleMap: widget.selectedVehicleMap,
+                            ),
+                          ),
+                        );
+                      } else {
+        
+                        showDialog(
+                          context: context,
+                          builder: (BuildContext context) {
+                            return AlertDialog(
+                              title: const Text('Erro'),
+                              content: const Text('Por favor, selecione pelo menos um veículo para cada medicação.'),
+                              actions: <Widget>[
+                                TextButton(
+                                  onPressed: () {
+                                    Navigator.of(context).pop();
+                                  },
+                                  child: const Text(
+                                    'OK',
+                                    style: TextStyle(color: Colors.black),
+                                  ),
+                                ),
+                              ],
+                            );
+                          },
+                        );
+                      }
+                    } else {
+                      String selectedVehicle = widget.selectedVehicleMap[widget.selectedMedications.first]!.first;
+  
                       Navigator.push(
                         context,
                         MaterialPageRoute(
@@ -308,55 +399,11 @@ class _VehiclePageState extends State<VehiclePage> {
                             isGestante: widget.isGestante,
                             periodo: widget.periodo,
                             selectedVehicle: selectedVehicle,
-                            selectedVehicleMap: widget.selectedVehicleMap, // Passar o mapa de veículos selecionados
+                            selectedVehicleMap: widget.selectedVehicleMap,
                           ),
                         ),
                       );
-                    } else {
-                      // Exibir um aviso para selecionar pelo menos um veículo para cada medicação
-                      showDialog(
-                        context: context,
-                        builder: (BuildContext context) {
-                          return AlertDialog(
-                            title: Text(
-                              'Aviso',
-                              style: TextStyle(color: douradoEscuro),
-                            ),
-                            content: const Text(
-                              'Por favor, selecione pelo menos um veículo para cada medicação.',
-                              style: TextStyle(color: Colors.black),
-                            ),
-                            actions: [
-                              TextButton(
-                                onPressed: () {
-                                  Navigator.of(context).pop();
-                                },
-                                child: Text(
-                                  'Fechar',
-                                  style: TextStyle(color: douradoEscuro, fontWeight: FontWeight.w600),
-                                ),
-                              ),
-                            ],
-                          );
-                        },
-                      );
                     }
-                  } else {
-                    String selectedVehicle = widget.selectedVehicleMap[widget.selectedMedications.first]!.first;
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => GeneratePdf(
-                          selectedActives: widget.selectedActives,
-                          descricao: widget.descricao,
-                          nomeCompleto: widget.nomeCompleto,
-                          isGestante: widget.isGestante,
-                          periodo: widget.periodo,
-                          selectedVehicle: selectedVehicle,
-                          selectedVehicleMap: widget.selectedVehicleMap, // Passar o mapa de veículos selecionados
-                        ),
-                      ),
-                    );
                   }
                 },
                 child: Container(
@@ -383,7 +430,7 @@ class _VehiclePageState extends State<VehiclePage> {
               padding: const EdgeInsets.all(8),
               child: GestureDetector(
                 onTap: () {
-                  Navigator.pop(context); // Navegar para a página anterior
+                  Navigator.pop(context); 
                 },
                 child: Container(
                   decoration: BoxDecoration(
@@ -419,6 +466,7 @@ class _VehiclePageState extends State<VehiclePage> {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: widget.selectedMedications.map((medication) {
             int index = widget.selectedMedications.indexOf(medication);
+   
             String selectedVehicle = _selectedVehicles[index];
             List<String> selectedVehicles = widget.selectedVehicleMap[medication] ?? [];
             String selectedVehicleText = selectedVehicles.isNotEmpty ? selectedVehicles.join(', ') : 'Nenhum veículo selecionado';

@@ -5,11 +5,12 @@ import 'package:harmoniza_ativos/app/pages/consultation/diagnostic/diagnostic_pa
 import '../../../data/data.dart';
 
 class QueryDefinition extends StatefulWidget {
+  final String nomePaciente;
   final String nomeCompleto;
   final String descricao;
-  bool isGestante;
-  String periodo;
-  QueryDefinition({super.key, required this.descricao, required this.nomeCompleto, required this.isGestante, required this.periodo});
+  final bool isGestante;
+  final String periodo;
+  const QueryDefinition({Key? key, required this.descricao, required this.nomeCompleto, required this.isGestante, required this.periodo, required this.nomePaciente}) : super(key: key);
 
   @override
   State<QueryDefinition> createState() => _QueryDefinitionState();
@@ -25,11 +26,12 @@ class _QueryDefinitionState extends State<QueryDefinition> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Theme.of(context).colorScheme.background,
-      body: Padding(
-        padding: const EdgeInsets.all(8),
-        child: SingleChildScrollView(
+    return SafeArea(
+      top: false,
+      child: Scaffold(
+        backgroundColor: Theme.of(context).colorScheme.background,
+        body: Padding(
+          padding: const EdgeInsets.all(8),
           child: Column(
             children: [
               const SizedBox(height: 50),
@@ -147,13 +149,13 @@ class _QueryDefinitionState extends State<QueryDefinition> {
                     "Ambos",
                   ]
                       .map<DropdownMenuItem<String?>>((e) => DropdownMenuItem(
-                            value: e, // Cada item deve ter um valor único.
+                            value: e,
                             child: Text(e.toString()),
                           ))
                       .toList(),
                 ),
               ),
-              const SizedBox(height: 170),
+              Expanded(child: Container()),
               Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: GestureDetector(
@@ -196,7 +198,7 @@ class _QueryDefinitionState extends State<QueryDefinition> {
                 padding: const EdgeInsets.all(8.0),
                 child: GestureDetector(
                   onTap: () {
-                    Navigator.pushNamed(context, '/mainPage');
+                    Navigator.pop(context);
                   },
                   child: Container(
                     decoration: BoxDecoration(borderRadius: BorderRadius.circular(10), color: douradoEscuro),
@@ -215,7 +217,6 @@ class _QueryDefinitionState extends State<QueryDefinition> {
                             ),
                           ),
                         ),
-                        const SizedBox(width: 5),
                       ],
                     ),
                   ),

@@ -19,6 +19,7 @@ void _resetPassword(BuildContext context) async {
       email: emailController.text,
     );
   } catch (e) {
+
     print('Error $e');
   }
 }

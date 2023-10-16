@@ -1,3 +1,5 @@
+
+
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
@@ -20,7 +22,7 @@ class FrostedGlassBox extends StatelessWidget {
         color: dourado.withOpacity(0.9),
         child: Stack(
           children: [
-            // blur effect
+     
             BackdropFilter(
               filter: ImageFilter.blur(
                 sigmaX: 4.0,
@@ -28,7 +30,7 @@ class FrostedGlassBox extends StatelessWidget {
               ),
               child: Container(),
             ),
-            // gradient effect
+  
             Container(
               decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(30),
@@ -40,7 +42,7 @@ class FrostedGlassBox extends StatelessWidget {
                     Colors.white.withOpacity(0.05),
                   ])),
             ),
-            // child
+     
             Column(
               children: [
                 const SizedBox(height: 10),

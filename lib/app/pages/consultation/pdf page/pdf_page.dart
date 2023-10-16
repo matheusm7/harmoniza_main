@@ -1,29 +1,33 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:harmoniza_ativos/app/pages/consultation/pdf%20page/util/patient_data.dart';
 import 'package:harmoniza_ativos/app/pages/consultation/pdf%20page/util/util.dart';
+import 'package:harmoniza_ativos/app/pages/main_page.dart';
 import 'package:pdf/widgets.dart' as pw;
 import 'package:printing/printing.dart';
+import 'package:provider/provider.dart';
 
 class PdfPage extends StatefulWidget {
-  final String nomePaciente;
+  final String nomeCompleto;
   final String descricao;
   final bool isGestante;
   final String periodo;
-  final List<String> selectedActives; // Adicione a lista de ativos selecionados
-  final List<String> valoresDosCampos; // Adicione a lista de valoresDosCampos
-  final String selectedVehicle;
-  final String observacao;
+  final List<String> selectedActives;
+  final List<String> valoresDosCampos;
+  final List<String> selectedVehicles;
+  final Map<String, String> observacoesVeiculos;
 
-  const PdfPage(
-      {super.key,
-      required this.nomePaciente,
-      required this.descricao,
-      required this.isGestante,
-      required this.periodo,
-      required this.selectedActives, // Passe a lista de ativos selecionados como parâmetro
-      required this.valoresDosCampos, // Passe a lista de valoresDosCampos como parâmetro
-      required this.selectedVehicle,
-      required this.observacao});
+  const PdfPage({
+    Key? key,
+    required this.nomeCompleto,
+    required this.descricao,
+    required this.isGestante,
+    required this.periodo,
+    required this.selectedActives,
+    required this.valoresDosCampos,
+    required this.selectedVehicles,
+    required this.observacoesVeiculos,
+  }) : super(key: key);
 
   @override
   State<PdfPage> createState() => _PdfPageState();
@@ -58,7 +62,29 @@ class _PdfPageState extends State<PdfPage> {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Flutter pdf'),
+        backgroundColor: Colors.black,
+        title: const Text('Flutter PDF'),
+        actions: <Widget>[
+          TextButton(
+            onPressed: () {
+              final patientData = Provider.of<PatientData>(context, listen: false);
+
+              patientData.addConsultation(
+                PatientInfo(
+                  nomeCompleto: widget.nomeCompleto,
+                  descricao: widget.descricao,
+                  periodo: widget.periodo,
+                  selectedActives: widget.selectedActives,
+                ),
+              );
+              Navigator.push(context, MaterialPageRoute(builder: (context) => const MainPage()));
+            },
+            child: const Text(
+              'Salvar',
+              style: TextStyle(color: Colors.white),
+            ),
+          ),
+        ],
       ),
       body: PdfPreview(
         maxPageWidth: 700,
@@ -66,16 +92,16 @@ class _PdfPageState extends State<PdfPage> {
         onPrinted: showPrintedToast,
         onShared: showSharedToast,
         build: (format) async {
-          return generatePdf(
+          return pdfbody(
             format,
-            widget.nomePaciente,
+            widget.nomeCompleto,
             widget.descricao,
             widget.isGestante,
             widget.periodo,
             widget.selectedActives,
             widget.valoresDosCampos,
-            widget.selectedVehicle,
-            widget.observacao,
+            widget.selectedVehicles,
+            widget.observacoesVeiculos,
           );
         },
       ),

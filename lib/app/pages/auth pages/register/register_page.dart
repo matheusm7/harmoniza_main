@@ -209,6 +209,7 @@ class _RegisterPageState extends State<RegisterPage> {
 
                         final success = await authProvider.register(email, password, confirmPassword, displayName);
                         if (success) {
+          
                           showDialog(
                             context: context,
                             builder: (context) {

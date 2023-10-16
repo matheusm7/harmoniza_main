@@ -8,4 +8,5 @@ ThemeData darkTheme = ThemeData(
     secondary: Colors.grey[600]!,
     tertiary: Colors.grey[400]!,
   ),
+  primaryColor: Colors.white,
 );
