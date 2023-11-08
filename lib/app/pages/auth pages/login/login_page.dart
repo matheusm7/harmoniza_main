@@ -16,12 +16,11 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> with SingleTickerProviderStateMixin {
-  late AnimationController _controller; // Corrigido o nome da variável para _controller
+  late AnimationController _controller;
   @override
   void initState() {
     super.initState();
     _controller = AnimationController(
-      // Corrigido o nome da variável para _controller
       value: 0.0,
       duration: const Duration(
         seconds: 25,
@@ -49,8 +48,6 @@ class _LoginPageState extends State<LoginPage> with SingleTickerProviderStateMix
     final authProvider = Provider.of<AuthController>(context);
 
     Future<void> handleLogin() async {
-      // Circular progress indicator
-
       String email = _emailController.text.trim();
       String password = _passwordController.text.trim();
 
@@ -82,7 +79,7 @@ class _LoginPageState extends State<LoginPage> with SingleTickerProviderStateMix
           context: context,
           builder: (context) {
             Future.delayed(const Duration(seconds: 2), () {
-              Navigator.of(context).pop(true); // Fecha a caixa de diálogo após 2 segundos
+              Navigator.of(context).pop(true);
             });
             return AlertDialog(
               title: const Text("Erro"),
@@ -154,10 +151,7 @@ class _LoginPageState extends State<LoginPage> with SingleTickerProviderStateMix
                 children: [
                   Text(
                     "Faça o login",
-                    style: TextStyle(
-                        color: douradoEscuro, // Certifique-se de definir douradoEscuro ou usar uma cor válida aqui
-                        fontWeight: FontWeight.bold,
-                        fontSize: 30),
+                    style: TextStyle(color: douradoEscuro, fontWeight: FontWeight.bold, fontSize: 30),
                   ),
                   const SizedBox(height: 15),
                   Container(
