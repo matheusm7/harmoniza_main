@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:harmoniza_ativos/app/pages/profile/edit/edit_profile.dart';
 
 import '../../widgets/query button/query_button_widget.dart';
 
@@ -33,9 +34,14 @@ class _HomePageState extends State<HomePage> {
                     Expanded(child: Container()),
                     Padding(
                       padding: const EdgeInsets.only(right: 16),
-                      child: CircleAvatar(
-                        radius: 22,
-                        backgroundImage: imageUrl != null ? NetworkImage(imageUrl) : null,
+                      child: GestureDetector(
+                        onTap: () {
+                          Navigator.push(context, MaterialPageRoute(builder: (context) => const EditProfile()));
+                        },
+                        child: CircleAvatar(
+                          radius: 22,
+                          backgroundImage: imageUrl != null ? NetworkImage(imageUrl) : null,
+                        ),
                       ),
                     ),
                   ],

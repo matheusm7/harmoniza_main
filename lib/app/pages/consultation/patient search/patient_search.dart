@@ -1,11 +1,11 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:harmoniza_ativos/app/controller/app%20state/app_state.dart';
 import 'package:harmoniza_ativos/app/data/data.dart';
 import 'package:harmoniza_ativos/app/pages/consultation/query%20definition/query_definition_page.dart';
 import 'package:provider/provider.dart';
 
-import '../../../controller/app state/app_state.dart';
 import '../../../widgets/query button/query_button_widget.dart';
 
 class PatientSearch extends StatefulWidget {
@@ -51,7 +51,7 @@ class PatientSearchState extends State<PatientSearch> {
             actions: [
               TextButton(
                 onPressed: () {
-                  Navigator.of(context).pop(); 
+                  Navigator.of(context).pop();
                 },
                 child: Text(
                   'OK',
@@ -65,18 +65,22 @@ class PatientSearchState extends State<PatientSearch> {
     }
 
     final appState = Provider.of<AppState>(context);
-    final pacientes = appState.pacientes.values.where((paciente) => paciente['userId'] == user.uid && paciente['nome'].toLowerCase().contains(searchTerm.toLowerCase()) && (selectedLetter.isEmpty || paciente['nome'].toLowerCase().startsWith(selectedLetter.toLowerCase()))).toList();
+    final pacientes = appState.pacientes.values
+        .where(
+          (paciente) => paciente['userId'] == user.uid && paciente['nome'].toLowerCase().contains(searchTerm.toLowerCase()) && (selectedLetter.isEmpty || paciente['nome'].toLowerCase().startsWith(selectedLetter.toLowerCase())),
+        )
+        .toList();
 
-    return SafeArea(
-      top: false,
-      child: Scaffold(
-        backgroundColor: Theme.of(context).colorScheme.background,
-        body: Column(
+    return Scaffold(
+      resizeToAvoidBottomInset: false,
+      backgroundColor: Theme.of(context).colorScheme.background,
+      body: SafeArea(
+        child: Column(
           children: [
             Row(
               children: [
                 Padding(
-                  padding: const EdgeInsets.all(16),
+                  padding: const EdgeInsets.only(left: 24),
                   child: InkWell(
                     onTap: () {
                       Navigator.pop(context);
@@ -129,6 +133,7 @@ class PatientSearchState extends State<PatientSearch> {
               child: Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 8),
                 child: ListView(
+                  shrinkWrap: true,
                   padding: const EdgeInsets.all(0),
                   children: pacientes.map((paciente) {
                     final pacienteId = paciente['pacienteId'];
@@ -188,7 +193,6 @@ class PatientSearchState extends State<PatientSearch> {
                   if (selectedPatientId.isEmpty) {
                     _showErrorDialog();
                   } else {
-        
                     final pacienteSelecionado = appState.pacientes[selectedPatientId];
 
                     if (pacienteSelecionado != null) {

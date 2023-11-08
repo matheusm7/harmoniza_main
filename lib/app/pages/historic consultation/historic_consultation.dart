@@ -1,7 +1,9 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:harmoniza_ativos/app/data/data.dart';
+import 'package:harmoniza_ativos/app/pages/consultation/vehicle/historic.dart';
 import 'package:provider/provider.dart';
-
-import '../consultation/vehicle/historic.dart';
 
 class HistoricConsultation extends StatelessWidget {
   const HistoricConsultation({super.key});
@@ -9,60 +11,145 @@ class HistoricConsultation extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final historicConsultationState = Provider.of<HistoricConsultationState>(context);
+    final userUID = FirebaseAuth.instance.currentUser?.uid;
 
+    if (userUID != null && historicConsultationState.historicData.containsKey(userUID)) {
+      final List<HistoricData> userHistoricData = historicConsultationState.historicData[userUID]!;
 
-    final List<String> selectedActives = historicConsultationState.selectedActives;
-
-    final List<String> customTitles = selectedActives.map((subclass) {
-      return getCustomTitle(subclass);
-    }).toList();
-
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Histórico de Consulta'),
-      ),
-      body: ListView(
-        children: <Widget>[
-          ListTile(
-            title: Text(
-              historicConsultationState.nomeCompleto,
-              style: const TextStyle(fontSize: 20),
-            ),
-          ),
-          ListTile(
-            title: Text(
-              'Descrição: ${historicConsultationState.descricao}',
-              style: const TextStyle(fontSize: 20),
-            ),
-          ),
-          ListTile(
-            title: Text(
-              'Gestante: ${historicConsultationState.isGestante ? 'Sim' : 'Não'}',
-              style: const TextStyle(fontSize: 20),
-            ),
-          ),
-          ListTile(
-            title: Text(
-              'Periodo: ${historicConsultationState.periodo}',
-              style: const TextStyle(fontSize: 20),
-            ),
-          ),
-          const SizedBox(height: 20), 
-          ListView.builder(
-            shrinkWrap: true,
-            itemCount: customTitles.length,
-            itemBuilder: (BuildContext context, int index) {
-              return ListTile(
-                title: Text(
-                  'Título Personalizado: ${customTitles[index]}',
-                  style: const TextStyle(fontSize: 20),
+      return Scaffold(
+        backgroundColor: Theme.of(context).colorScheme.background,
+        body: SafeArea(
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16),
+            child: Column(
+              children: [
+                Row(
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.only(left: 8),
+                      child: InkWell(
+                        onTap: () {
+                          Navigator.pop(context);
+                        },
+                        child: Icon(
+                          Icons.arrow_back_ios,
+                          color: douradoEscuro,
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
-              );
-            },
+                Image.asset(
+                  'assets/logo.png',
+                  width: 150,
+                ),
+                const SizedBox(height: 30),
+                Text(
+                  'HISTÓRICO DE CONSULTAS',
+                  style: GoogleFonts.poppins(
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
+                    color: douradoEscuro,
+                  ),
+                ),
+                Expanded(
+                  child: ListView.builder(
+                    padding: EdgeInsets.zero,
+                    shrinkWrap: true,
+                    itemCount: userHistoricData.length,
+                    itemBuilder: (BuildContext context, int index) {
+                      final historicData = userHistoricData[index];
+                      return Card(
+                        margin: const EdgeInsets.all(8),
+                        child: ListTile(
+                          title: Text(
+                            historicData.nomeCompleto,
+                            style: const TextStyle(fontSize: 17),
+                          ),
+                          subtitle: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text('Descrição: ${historicData.descricao}'),
+                              Text('Gestante: ${historicData.isGestante ? 'Sim' : 'Não'}'),
+                              Text('Período: ${historicData.periodo}'),
+                              Text(
+                                historicData.selectedActives.join(', '),
+                              ),
+                            ],
+                          ),
+                        ),
+                      );
+                    },
+                  ),
+                ),
+              ],
+            ),
           ),
-        ],
-      ),
-    );
+        ),
+      );
+    } else {
+      return Scaffold(
+        backgroundColor: Theme.of(context).colorScheme.background,
+        body: SafeArea(
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16),
+            child: Column(
+              children: [
+                Column(
+                  children: [
+                    Row(
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.only(left: 8),
+                          child: InkWell(
+                            onTap: () {
+                              Navigator.pop(context);
+                            },
+                            child: Icon(
+                              Icons.arrow_back_ios,
+                              color: douradoEscuro,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                    Image.asset(
+                      'assets/logo.png',
+                      width: 150,
+                    ),
+                    const SizedBox(height: 30),
+                    Text(
+                      'HISTÓRICO DE CONSULTAS',
+                      style: GoogleFonts.poppins(
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold,
+                        color: douradoEscuro,
+                      ),
+                    ),
+                    const SizedBox(height: 15),
+                    Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Column(
+                          children: [
+                            Center(
+                              child: Text(
+                                "Nenhuma informação de paciente encontrada.",
+                                style: GoogleFonts.poppins(fontSize: 15),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ],
+                    )
+                  ],
+                )
+              ],
+            ),
+          ),
+        ),
+      );
+    }
   }
 }
 

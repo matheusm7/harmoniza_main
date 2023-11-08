@@ -29,7 +29,6 @@ class _SearchPageState extends State<SearchPage> {
 
     final appState = Provider.of<AppState>(context);
 
-
     final pacientes = appState.pacientes.values.where((paciente) => paciente['userId'] == user.uid).toList();
 
     return Scaffold(
@@ -60,7 +59,6 @@ class _SearchPageState extends State<SearchPage> {
               TextField(
                 style: const TextStyle(color: Colors.white),
                 onChanged: (value) {
-          
                   setState(() {
                     searchTerm = value.toLowerCase();
                   });
@@ -80,7 +78,6 @@ class _SearchPageState extends State<SearchPage> {
                   prefixIconColor: Theme.of(context).colorScheme.primary,
                 ),
               ),
-              // Exibir os dados de cada paciente
               if (pacientes.isNotEmpty)
                 Column(
                   children: pacientes.map((paciente) {

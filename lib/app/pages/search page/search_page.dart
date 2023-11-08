@@ -14,7 +14,18 @@ class SearchPage extends StatefulWidget {
 
 class _SearchPageState extends State<SearchPage> {
   final FirebaseAuth _auth = FirebaseAuth.instance;
-  String searchTerm = ''; 
+  String searchTerm = '';
+
+  @override
+  void initState() {
+    super.initState();
+    _initializeData();
+  }
+
+  _initializeData() async {
+    final User? user = _auth.currentUser;
+    if (user != null) {}
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -60,9 +71,8 @@ class _SearchPageState extends State<SearchPage> {
                     TextField(
                       style: const TextStyle(color: Colors.white),
                       onChanged: (value) {
-                   
                         setState(() {
-                          searchTerm = value; 
+                          searchTerm = value;
                         });
                       },
                       decoration: InputDecoration(

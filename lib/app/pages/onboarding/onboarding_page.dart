@@ -30,7 +30,7 @@ class _OnBoardingState extends State<OnBoarding> {
     Color color = const Color.fromARGB(255, 168, 138, 78);
 
     return Scaffold(
-      backgroundColor: Colors.grey[300],
+      backgroundColor: Theme.of(context).colorScheme.background,
       body: Column(
         children: [
           Expanded(

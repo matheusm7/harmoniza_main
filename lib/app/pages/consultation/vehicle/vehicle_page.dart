@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:harmoniza_ativos/app/pages/consultation/pdf%20page/generate_pdf.dart';
@@ -202,6 +203,7 @@ class _VehiclePageState extends State<VehiclePage> {
     final List<String> selectedActives = widget.selectedActives;
 
     historicConsultationState.setHistoricConsultationInfo(
+      userUID: FirebaseAuth.instance.currentUser?.uid ?? '',
       nomeCompleto: nomeCompleto,
       descricao: descricao,
       isGestante: widget.isGestante,
@@ -271,9 +273,9 @@ class _VehiclePageState extends State<VehiclePage> {
                       setState(() {
                         if (widget.isPorDiagnosticoSelected) {
                           if (newValue!) {
-                            widget.selectedVehicleMap[selectedMedication] = [vehicle]; 
+                            widget.selectedVehicleMap[selectedMedication] = [vehicle];
                           } else {
-                            widget.selectedVehicleMap[selectedMedication] = []; 
+                            widget.selectedVehicleMap[selectedMedication] = [];
                           }
                         } else {
                           if (newValue!) {
@@ -312,7 +314,6 @@ class _VehiclePageState extends State<VehiclePage> {
                   }
 
                   if (!atLeastOneMedicationSelected) {
-                
                     showDialog(
                       context: context,
                       builder: (BuildContext context) {
@@ -322,7 +323,7 @@ class _VehiclePageState extends State<VehiclePage> {
                           actions: <Widget>[
                             TextButton(
                               onPressed: () {
-                                Navigator.of(context).pop(); 
+                                Navigator.of(context).pop();
                               },
                               child: const Text(
                                 'OK',
@@ -334,10 +335,7 @@ class _VehiclePageState extends State<VehiclePage> {
                       },
                     );
                   } else {
-          
-
                     if (widget.isPorDiagnosticoSelected) {
-                  
                       bool allMedicationsSelected = true;
                       for (String medication in widget.selectedMedications) {
                         if (widget.selectedVehicleMap[medication]!.isEmpty) {
@@ -348,7 +346,7 @@ class _VehiclePageState extends State<VehiclePage> {
 
                       if (allMedicationsSelected) {
                         String selectedVehicle = widget.selectedVehicleMap[widget.selectedMedications[_currentPageIndex]]!.first;
-                   
+
                         Navigator.push(
                           context,
                           MaterialPageRoute(
@@ -364,7 +362,6 @@ class _VehiclePageState extends State<VehiclePage> {
                           ),
                         );
                       } else {
-        
                         showDialog(
                           context: context,
                           builder: (BuildContext context) {
@@ -388,7 +385,7 @@ class _VehiclePageState extends State<VehiclePage> {
                       }
                     } else {
                       String selectedVehicle = widget.selectedVehicleMap[widget.selectedMedications.first]!.first;
-  
+
                       Navigator.push(
                         context,
                         MaterialPageRoute(
@@ -413,15 +410,20 @@ class _VehiclePageState extends State<VehiclePage> {
                   ),
                   width: double.infinity,
                   height: 50,
-                  child: Center(
-                    child: Text(
-                      'CONTINUAR',
-                      style: GoogleFonts.poppins(
-                        fontSize: 14,
-                        color: Colors.white,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Center(
+                        child: Text(
+                          'CONTINUAR',
+                          style: GoogleFonts.poppins(
+                            fontSize: 14,
+                            color: Colors.white,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      )
+                    ],
                   ),
                 ),
               ),
@@ -430,7 +432,7 @@ class _VehiclePageState extends State<VehiclePage> {
               padding: const EdgeInsets.all(8),
               child: GestureDetector(
                 onTap: () {
-                  Navigator.pop(context); 
+                  Navigator.pop(context);
                 },
                 child: Container(
                   decoration: BoxDecoration(
@@ -439,15 +441,20 @@ class _VehiclePageState extends State<VehiclePage> {
                   ),
                   width: double.infinity,
                   height: 50,
-                  child: Center(
-                    child: Text(
-                      'VOLTAR',
-                      style: GoogleFonts.poppins(
-                        fontSize: 14,
-                        color: Colors.white,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Center(
+                        child: Text(
+                          'VOLTAR',
+                          style: GoogleFonts.poppins(
+                            fontSize: 14,
+                            color: Colors.white,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      )
+                    ],
                   ),
                 ),
               ),
@@ -466,7 +473,7 @@ class _VehiclePageState extends State<VehiclePage> {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: widget.selectedMedications.map((medication) {
             int index = widget.selectedMedications.indexOf(medication);
-   
+
             String selectedVehicle = _selectedVehicles[index];
             List<String> selectedVehicles = widget.selectedVehicleMap[medication] ?? [];
             String selectedVehicleText = selectedVehicles.isNotEmpty ? selectedVehicles.join(', ') : 'Nenhum veículo selecionado';

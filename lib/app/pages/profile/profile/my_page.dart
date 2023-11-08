@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:harmoniza_ativos/app/data/data.dart';
 import 'package:harmoniza_ativos/app/pages/auth%20pages/login/login_page.dart';
-import 'package:harmoniza_ativos/app/pages/consultation/pdf%20page/util/historicpage.dart';
+import 'package:harmoniza_ativos/app/pages/historic%20consultation/historic_consultation.dart';
 import 'package:harmoniza_ativos/app/pages/profile/edit/edit_profile.dart';
 import 'package:harmoniza_ativos/app/pages/profile/support/support_page_profile.dart';
 
@@ -72,16 +72,10 @@ class _MyPageState extends State<MyPage> {
                   const Divider(),
                   ProfileMenuWidget(
                     dourado: dourado,
-                    title: "Configurações",
-                    icon: Icons.settings,
-                    onPress: () {},
-                  ),
-                  ProfileMenuWidget(
-                    dourado: dourado,
                     title: "Historico de consultas",
                     icon: Icons.format_list_bulleted,
                     onPress: () {
-                      Navigator.push(context, MaterialPageRoute(builder: (context) => const HistoricConsultationPage()));
+                      Navigator.push(context, MaterialPageRoute(builder: (context) => const HistoricConsultation()));
                     },
                   ),
                   ProfileMenuWidget(

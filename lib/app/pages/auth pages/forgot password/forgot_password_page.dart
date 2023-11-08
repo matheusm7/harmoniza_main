@@ -19,7 +19,6 @@ void _resetPassword(BuildContext context) async {
       email: emailController.text,
     );
   } catch (e) {
-
     print('Error $e');
   }
 }
@@ -28,60 +27,78 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.grey[300],
-      body: Padding(
-        padding: const EdgeInsets.all(24),
-        child: Center(
-          child: Column(
-            children: [
-              const SizedBox(height: 50),
-              Image.asset(
-                'assets/logo.png',
-                width: 150,
-              ),
-              const SizedBox(height: 50),
-              Text(
-                'REDEFINA SUA SENHA',
-                style: GoogleFonts.poppins(
-                  fontSize: 20,
-                  fontWeight: FontWeight.bold,
-                  color: douradoEscuro,
+      backgroundColor: Theme.of(context).colorScheme.background,
+      body: SafeArea(
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 16),
+          child: Center(
+            child: Column(
+              children: [
+                Row(
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.only(left: 8),
+                      child: InkWell(
+                        onTap: () {
+                          Navigator.pop(context);
+                        },
+                        child: Icon(
+                          Icons.arrow_back_ios,
+                          color: douradoEscuro,
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
-              ),
-              const SizedBox(height: 30),
-              TextField(
-                controller: emailController,
-                decoration: InputDecoration(
-                  hintText: 'Digite seu e-mail',
-                  enabledBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(10.0),
-                    borderSide: const BorderSide(color: dourado, width: 2),
-                  ),
-                  focusedBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(10.0),
-                    borderSide: const BorderSide(color: dourado, width: 2),
-                  ),
+                const SizedBox(height: 50),
+                Image.asset(
+                  'assets/logo.png',
+                  width: 150,
                 ),
-              ),
-              const SizedBox(height: 20),
-              InkWell(
-                onTap: () => _resetPassword(context),
-                child: Container(
-                  height: 50,
-                  margin: const EdgeInsets.symmetric(horizontal: 50),
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(50),
+                const SizedBox(height: 50),
+                Text(
+                  'REDEFINA SUA SENHA',
+                  style: GoogleFonts.poppins(
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
                     color: douradoEscuro,
                   ),
-                  child: const Center(
-                    child: Text(
-                      "REDEFINIR",
-                      style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+                ),
+                const SizedBox(height: 30),
+                TextField(
+                  controller: emailController,
+                  decoration: InputDecoration(
+                    hintText: 'Digite seu e-mail',
+                    enabledBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(10.0),
+                      borderSide: const BorderSide(color: dourado, width: 2),
+                    ),
+                    focusedBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(10.0),
+                      borderSide: const BorderSide(color: dourado, width: 2),
                     ),
                   ),
                 ),
-              ),
-            ],
+                const SizedBox(height: 20),
+                InkWell(
+                  onTap: () => _resetPassword(context),
+                  child: Container(
+                    height: 50,
+                    margin: const EdgeInsets.symmetric(horizontal: 50),
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(50),
+                      color: douradoEscuro,
+                    ),
+                    child: const Center(
+                      child: Text(
+                        "REDEFINIR",
+                        style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
           ),
         ),
       ),

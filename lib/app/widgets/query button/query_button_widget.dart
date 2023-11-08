@@ -58,35 +58,41 @@ class QueryButton extends StatefulWidget {
                   ),
                 );
               } else {
-                final user = authProvider.user;
-                if (user == null) {
-                  return;
-                }
-
-           
                 final pacienteId = DateTime.now().millisecondsSinceEpoch.toString();
 
                 final pacienteData = {
-                  'userId': user.uid,
+                  'userId': authProvider.user?.uid,
                   'pacienteId': pacienteId,
                   'nome': nomeCompleto,
                   'descricao': descricao,
                 };
 
-                appState.adicionarPaciente(pacienteId, pacienteData);
-
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => QueryDefinition(
-                      nomePaciente: nomeCompleto,
-                      descricao: descricao,
-                      nomeCompleto: nomeCompleto,
-                      isGestante: false,
-                      periodo: '',
-                    ),
+                showDialog(
+                  context: context,
+                  builder: (context) => const Center(
+                    child: CircularProgressIndicator(),
                   ),
+                  barrierDismissible: false,
                 );
+
+                Future.delayed(const Duration(seconds: 1), () {
+                  Future.delayed(const Duration(seconds: 1), () {
+                    appState.adicionarPaciente(pacienteId, pacienteData);
+
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => QueryDefinition(
+                          nomePaciente: nomeCompleto,
+                          descricao: descricao,
+                          nomeCompleto: nomeCompleto,
+                          isGestante: false,
+                          periodo: '',
+                        ),
+                      ),
+                    );
+                  });
+                });
               }
             },
             child: Text(

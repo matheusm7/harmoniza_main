@@ -80,6 +80,7 @@ class _HistoricConsultationPageState extends State<HistoricConsultationPage> {
                           subtitle: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
+                              Text('Nome: ${consulta.nomeCompleto}'),
                               Text('Descrição: ${consulta.descricao}'),
                               Text('Período: ${consulta.periodo}'),
                               Text('Ativos: ${consulta.selectedActives.map((active) => getCustomTitle(active)).join(', ')}'),

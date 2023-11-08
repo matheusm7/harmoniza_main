@@ -6,39 +6,52 @@ class AppState extends ChangeNotifier {
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
-  User? _user; // Armazena o usuário autenticado
-
+  User? _user;
   String _nomeCompleto = '';
   final Map<String, Map<String, dynamic>> _pacientes = {};
 
-  // Construtor que inicializa o usuário autenticado
-  AppState() {
+  Future<void> init() async {
     _auth.authStateChanges().listen((User? user) {
       _user = user;
+      if (_user != null) {
+        _loadPacientesFromFirebase();
+      }
       notifyListeners();
     });
   }
 
   User? get user => _user;
-
   String get nomeCompleto => _nomeCompleto;
-
   Map<String, Map<String, dynamic>> get pacientes => _pacientes;
 
-  // Método para atualizar os dados do paciente
-  void atualizarPaciente(String pacienteId, Map<String, dynamic> pacienteData) {
-    if (_pacientes.containsKey(pacienteId)) {
-
-      _pacientes[pacienteId] = pacienteData;
-    } else {
-      _pacientes[pacienteId] = pacienteData;
+  Future<void> _loadPacientesFromFirebase() async {
+    try {
+      final userId = _user!.uid;
+      final querySnapshot = await _firestore.collection('usuarios').doc(userId).collection('pacientes').get();
+      for (var doc in querySnapshot.docs) {
+        _pacientes[doc.id] = doc.data();
+      }
+      notifyListeners();
+    } catch (error) {
+      print('Erro ao carregar pacientes do Firebase: $error');
     }
+  }
+
+  void atualizarPaciente(String pacienteId, Map<String, dynamic> pacienteData) {
+    _pacientes[pacienteId] = pacienteData;
+    salvarDadosPaciente(pacienteId, pacienteData); // Salva os dados do paciente no Firebase
     notifyListeners();
   }
 
-  // Método para adicionar um novo paciente à lista
   void adicionarPaciente(String pacienteId, Map<String, dynamic> pacienteData) {
     _pacientes[pacienteId] = pacienteData;
+    salvarDadosPaciente(pacienteId, pacienteData); // Salva os dados do paciente no Firebase
+    notifyListeners();
+  }
+
+  void setPacientes(Map<String, Map<String, dynamic>> pacientes) {
+    _pacientes.clear();
+    _pacientes.addAll(pacientes);
     notifyListeners();
   }
 
@@ -46,7 +59,6 @@ class AppState extends ChangeNotifier {
     try {
       final userId = _user?.uid;
       if (userId != null) {
-
         await _firestore.collection('usuarios').doc(userId).collection('pacientes').doc(pacienteId).set(pacienteData);
       }
     } catch (error) {

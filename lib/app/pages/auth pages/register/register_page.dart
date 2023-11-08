@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:harmoniza_ativos/app/data/data.dart';
 import 'package:provider/provider.dart';
 
 import '../../../controller/auth controller/auth_controller.dart';
@@ -11,7 +12,10 @@ class RegisterPage extends StatefulWidget {
   State<RegisterPage> createState() => _RegisterPageState();
 }
 
-class _RegisterPageState extends State<RegisterPage> {
+class _RegisterPageState extends State<RegisterPage> with SingleTickerProviderStateMixin {
+  late AnimationController _controller;
+  bool _isVisible = true;
+  bool _isVisible2 = true;
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   final TextEditingController _confirmPasswordController = TextEditingController();
@@ -20,58 +24,82 @@ class _RegisterPageState extends State<RegisterPage> {
   String _errorMessage = '';
 
   @override
+  void initState() {
+    super.initState();
+    _controller = AnimationController(
+      value: 0.0,
+      duration: const Duration(
+        seconds: 25,
+      ),
+      upperBound: 1,
+      lowerBound: -1,
+      vsync: this,
+    )..repeat();
+  }
+
+  @override
   Widget build(BuildContext context) {
     final width = MediaQuery.of(context).size.width;
     final authProvider = Provider.of<AuthController>(context);
-
+    var size = MediaQuery.of(context).size;
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: Theme.of(context).colorScheme.background,
       body: SingleChildScrollView(
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
-            SizedBox(
-              height: 350,
-              child: Stack(
-                children: <Widget>[
-                  Positioned(
-                    top: -40,
-                    height: 350,
-                    width: width,
-                    child: Container(
-                      decoration: const BoxDecoration(
-                        image: DecorationImage(
-                          image: AssetImage('assets/background.png'),
-                          fit: BoxFit.fill,
+            Stack(
+              alignment: Alignment.center,
+              children: <Widget>[
+                AnimatedBuilder(
+                  animation: _controller,
+                  builder: (BuildContext context, Widget? child) {
+                    return ClipPath(
+                      clipper: DrawClip(_controller.value),
+                      child: Container(
+                          height: size.height * 0.25,
+                          decoration: BoxDecoration(
+                              gradient: LinearGradient(
+                            begin: Alignment.bottomLeft,
+                            end: Alignment.topRight,
+                            colors: [const Color.fromARGB(200, 235, 212, 165).withOpacity(0.8), const Color.fromARGB(181, 168, 138, 78).withOpacity(0.8)],
+                          ))),
+                    );
+                  },
+                ),
+                AnimatedBuilder(
+                  animation: _controller,
+                  builder: (BuildContext context, Widget? child) {
+                    return ClipPath(
+                      clipper: DrawClip2(_controller.value),
+                      child: Container(
+                        height: size.height * 0.29,
+                        decoration: BoxDecoration(
+                          gradient: LinearGradient(
+                            begin: Alignment.bottomLeft,
+                            end: Alignment.topRight,
+                            colors: [const Color.fromARGB(213, 231, 201, 140).withOpacity(0.6), const Color.fromARGB(222, 167, 136, 74).withOpacity(0.6)],
+                          ),
                         ),
                       ),
-                    ),
-                  ),
-                  Positioned(
-                    height: 350,
-                    width: width + 20,
-                    child: Container(
-                      decoration: const BoxDecoration(
-                        image: DecorationImage(
-                          image: AssetImage('assets/background1.png'),
-                          fit: BoxFit.fill,
-                        ),
-                      ),
-                    ),
-                  )
-                ],
-              ),
+                    );
+                  },
+                ),
+              ],
             ),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 40),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const Text(
+                  Text(
                     "Registre-se",
-                    style: TextStyle(color: Color.fromRGBO(49, 39, 79, 1), fontWeight: FontWeight.bold, fontSize: 30),
+                    style: TextStyle(
+                      color: douradoEscuro,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 30,
+                    ),
                   ),
-                  const SizedBox(height: 30),
+                  const SizedBox(height: 15),
                   Container(
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(10),
@@ -94,6 +122,7 @@ class _RegisterPageState extends State<RegisterPage> {
                             ),
                           ),
                           child: TextField(
+                            style: const TextStyle(color: Colors.black),
                             controller: _displayNameController,
                             decoration: const InputDecoration(
                               border: InputBorder.none,
@@ -112,8 +141,10 @@ class _RegisterPageState extends State<RegisterPage> {
                             ),
                           ),
                           child: TextField(
+                            style: const TextStyle(color: Colors.black),
                             controller: _emailController,
                             decoration: const InputDecoration(
+                              focusColor: Colors.red,
                               border: InputBorder.none,
                               hintText: "E-mail",
                               hintStyle: TextStyle(
@@ -130,29 +161,53 @@ class _RegisterPageState extends State<RegisterPage> {
                             ),
                           ),
                           child: TextField(
+                            style: const TextStyle(color: Colors.black),
                             controller: _passwordController,
-                            decoration: const InputDecoration(
+                            decoration: InputDecoration(
+                              suffixIcon: IconButton(
+                                icon: Icon(
+                                  _isVisible ? Icons.visibility_off : Icons.visibility,
+                                  color: douradoEscuro,
+                                ),
+                                onPressed: () {
+                                  setState(() {
+                                    _isVisible = !_isVisible;
+                                  });
+                                },
+                              ),
                               border: InputBorder.none,
                               hintText: "Senha",
-                              hintStyle: TextStyle(
+                              hintStyle: const TextStyle(
                                 color: Colors.grey,
                               ),
                             ),
-                            obscureText: true,
+                            obscureText: _isVisible,
                           ),
                         ),
                         Container(
                           padding: const EdgeInsets.all(10),
                           child: TextField(
+                            style: const TextStyle(color: Colors.black),
                             controller: _confirmPasswordController,
-                            decoration: const InputDecoration(
+                            decoration: InputDecoration(
+                              suffixIcon: IconButton(
+                                icon: Icon(
+                                  _isVisible2 ? Icons.visibility_off : Icons.visibility,
+                                  color: douradoEscuro,
+                                ),
+                                onPressed: () {
+                                  setState(() {
+                                    _isVisible2 = !_isVisible2;
+                                  });
+                                },
+                              ),
                               border: InputBorder.none,
                               hintText: "Confirme sua senha",
-                              hintStyle: TextStyle(
+                              hintStyle: const TextStyle(
                                 color: Colors.grey,
                               ),
                             ),
-                            obscureText: true,
+                            obscureText: _isVisible2,
                           ),
                         ),
                       ],
@@ -209,15 +264,13 @@ class _RegisterPageState extends State<RegisterPage> {
 
                         final success = await authProvider.register(email, password, confirmPassword, displayName);
                         if (success) {
-          
                           showDialog(
                             context: context,
                             builder: (context) {
                               return AlertDialog(
                                 title: const Text("Registro Concluído"),
-                                content: Text(
+                                content: const Text(
                                   "Você foi registrado com sucesso!",
-                                  style: TextStyle(color: Theme.of(context).colorScheme.primary),
                                 ),
                                 actions: [
                                   TextButton(
@@ -229,7 +282,10 @@ class _RegisterPageState extends State<RegisterPage> {
                                         ),
                                       );
                                     },
-                                    child: const Text("OK"),
+                                    child: const Text(
+                                      "OK",
+                                      style: TextStyle(color: Colors.black, fontWeight: FontWeight.w400),
+                                    ),
                                   ),
                                 ],
                               );
@@ -247,14 +303,12 @@ class _RegisterPageState extends State<RegisterPage> {
                         margin: const EdgeInsets.symmetric(horizontal: 50),
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(50),
-                          color: const Color.fromRGBO(49, 39, 79, 1),
+                          color: douradoEscuro,
                         ),
                         child: const Center(
                           child: Text(
                             "Registrar",
-                            style: TextStyle(
-                              color: Colors.white,
-                            ),
+                            style: TextStyle(color: Colors.white, fontWeight: FontWeight.w500),
                           ),
                         ),
                       ),
@@ -276,9 +330,9 @@ class _RegisterPageState extends State<RegisterPage> {
                               MaterialPageRoute(builder: (context) => const LoginPage()),
                             );
                           },
-                          child: const Text(
+                          child: Text(
                             ' Faça o login.',
-                            style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: Color.fromRGBO(49, 39, 79, 1)),
+                            style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: douradoEscuro),
                           ),
                         ),
                       ],
